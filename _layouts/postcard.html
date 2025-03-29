@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+<body>
+  <header>
+    <h1>{{ page.title }}</h1>
+    <p><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
+    <p><strong>Country:</strong> {{ page.categories.country }}</p>
+    <p><strong>Topic:</strong> {{ page.categories.topic }}</p>
+  </header>
+  <main>
+    <article>
+      <img src="{{ page.images[0] }}" alt="Post Image 1">
+      {{ content }}
+      <img src="{{ page.images[1] }}" alt="Post Image 2">
+    </article>
+  </main>
+  <footer>
+    <p>Back to <a href="/">home</a></p>
+  </footer>
+</body>
+</html>

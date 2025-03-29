@@ -1,0 +1,23 @@
+---
+layout: default
+title: All Postcards
+---
+
+<h1>All Postcards</h1>
+<ul class="post-list">
+  {% for post in site.posts %}
+  <li>
+    <article>
+      <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+      <p><strong>Date:</strong> {{ post.date | date: "%B %d, %Y" }}</p>
+      <p><strong>Country:</strong> {{ post.categories.country }}</p>
+      <p><strong>Topic:</strong> {{ post.categories.topic }}</p>
+      {% if post.images %}
+      <img src="{{ post.images.landscape | relative_url }}" alt="Postcard Image" class="post-thumbnail">
+      {% endif %}
+      <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
+      <a href="{{ post.url | relative_url }}">Read more</a>
+    </article>
+  </li>
+  {% endfor %}
+</ul>
