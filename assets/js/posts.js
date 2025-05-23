@@ -1,12 +1,13 @@
 // Posts functionality
-let currentlyVisible = 12;
+const POSTS_INCREMENT = 16;
+let currentlyVisible = POSTS_INCREMENT;
 const totalPosts = parseInt(document.querySelector('#postcard-grid').dataset.totalPosts);
 
 function loadMore() {
   const hiddenItems = document.querySelectorAll('.postcard-item.hidden');
   
-  // Show next 12 items
-  for (let i = 0; i < Math.min(12, hiddenItems.length); i++) {
+  // Show next POSTS_INCREMENT items
+  for (let i = 0; i < Math.min(POSTS_INCREMENT, hiddenItems.length); i++) {
     hiddenItems[i].classList.remove('hidden');
     currentlyVisible++;
   }
