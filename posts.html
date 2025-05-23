@@ -6,7 +6,7 @@ title: All Postcards
   {% assign visible_posts = 0 %}
   {% for post in site.posts %}
     {% assign visible_posts = visible_posts | plus: 1 %}
-    <div class="postcard-item {% if visible_posts > 12 %}hidden{% endif %}" 
+    <div class="postcard-item {% if visible_posts > 16 %}hidden{% endif %}" 
          data-index="{{ visible_posts }}"
          onmouseenter="flipCard(this, true)"
          onmouseleave="flipCard(this, false)">
