@@ -1,13 +1,11 @@
 ---
 layout: postcard
-title: "Happy New Year"
+title: Happy New Year
 date: 2024-01-02
-categories:
-    country: DE
-    topic: Identity
-images:
-    landscape: /postcards/example-landscape.png
-    portrait: /postcards/template-landscape.png
+country: DE
+topic: Identity
+image-front: /assets/postcards/example-landscape-front.png
+image-back: /assets/postcards/example-landscape-back.png
 ---
 
 Growing up, I always felt like I was different. It wasn't until I moved to Berlin that I found the freedom to explore and express who I truly am.
