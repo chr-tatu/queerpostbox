@@ -1,6 +1,6 @@
 // Posts functionality
-const POSTS_INCREMENT = 16;
-let currentlyVisible = POSTS_INCREMENT;
+const POSTS_INCREMENT = 8;
+let currentlyVisible = 16;
 const totalPosts = parseInt(document.querySelector('#postcard-grid').dataset.totalPosts);
 
 function loadMore() {
@@ -15,7 +15,7 @@ function loadMore() {
 
 // Infinite scroll functionality
 function handleScroll() {
-  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) {
     // Load more when user is 1000px from bottom
     if (currentlyVisible < totalPosts) {
       loadMore();
