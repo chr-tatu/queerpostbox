@@ -35,13 +35,16 @@ function flipCard(container, isHover) {
   }
   
   if (isHover) {
-    // Add 0.5 second delay before flip starts
     container.flipTimeout = setTimeout(() => {
-      img.src = img.dataset.back;
+      // Start the flip animation
       img.style.transform = 'rotateY(180deg) scaleX(-1)';
+      
+      // Change the image at the middle of the animation (170ms into 340ms transition)
+      setTimeout(() => {
+        img.src = img.dataset.back;
+      }, 200);
     }, 300);
   } else {
-    // Immediate flip back to front
     img.src = img.dataset.front;
     img.style.transform = '';
   }
