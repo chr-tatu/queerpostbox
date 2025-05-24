@@ -2,6 +2,12 @@
 layout: posts
 title: All Postcards
 ---
+<div class="posts-header">
+  <div class="view-toggle">
+    <button class="view-btn active" data-view="grid">Grid</button>
+    <button class="view-btn" data-view="column">Column</button>
+  </div>
+</div>
 <div class="postcard-grid" id="postcard-grid" data-total-posts="{{ site.posts.size }}">
   {% assign visible_posts = 0 %}
   {% for post in site.posts %}

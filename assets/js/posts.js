@@ -50,8 +50,37 @@ function flipCard(container, isHover) {
   }
 }
 
+// View toggle functionality
+function toggleView(view) {
+  const grid = document.getElementById('postcard-grid');
+  const buttons = document.querySelectorAll('.view-btn');
+  
+  // Update button states
+  buttons.forEach(btn => {
+    btn.classList.remove('active');
+    if (btn.dataset.view === view) {
+      btn.classList.add('active');
+    }
+  });
+  
+  // Update grid class
+  if (view === 'column') {
+    grid.classList.add('column-view');
+  } else {
+    grid.classList.remove('column-view');
+  }
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Add scroll event listener
   window.addEventListener('scroll', handleScroll);
+  
+  // Add view toggle event listeners
+  const viewButtons = document.querySelectorAll('.view-btn');
+  viewButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      toggleView(this.dataset.view);
+    });
+  });
 });
