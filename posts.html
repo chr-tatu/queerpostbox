@@ -14,9 +14,16 @@ title: All Postcards
     {% assign visible_posts = visible_posts | plus: 1 %}
     <div class="postcard-item {% if visible_posts > 16 %}hidden{% endif %}" 
          data-index="{{ visible_posts }}"
+         data-slug="{{ post.slug }}"
+         data-title="{{ post.title | escape }}"
+         data-date="{{ post.date | date: '%B %d, %Y' }}"
+         data-country="{{ post.country }}"
+         data-topic="{{ post.topic }}"
+         data-content="{{ post.content | escape }}"
          onmouseenter="flipCard(this, true)"
-         onmouseleave="flipCard(this, false)">
-      <a href="{{ post.url | relative_url }}">
+         onmouseleave="flipCard(this, false)"
+         onclick="openModal(this)">
+      <div class="postcard-link">
         {% if post.image-front %}
           <img src="{{ post.image-front | relative_url }}" 
                alt="{{ post.title }}" 
@@ -28,9 +35,30 @@ title: All Postcards
             No Image
           </div>
         {% endif %}
-      </a>
+      </div>
     </div>
   {% endfor %}
 </div>
 
+<!-- Modal Structure -->
+<div id="postcard-modal" class="modal-overlay">
+  <div class="modal-container">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div class="modal-content">
+      <div class="modal-images"></div>
+      <div class="modal-details">
+        <div class="modal-message"></div>
+        <div class="modal-meta">
+          <div class="modal-info">
+            <span class="modal-country"></span>
+            <span class="modal-date"></span>
+          </div>
+          <div class="modal-tags">
+            <span class="modal-topic"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
