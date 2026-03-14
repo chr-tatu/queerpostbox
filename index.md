@@ -1,13 +1,10 @@
 ---
-# Feel free to add content and custom Front Matter to this file.
-# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
-
 layout: default
 title: Home
+redirect_to: /posts.html
+permalink: /
 ---
 
-🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈
-
-Under construction
-
-🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈🏳️‍🌈
+<script>window.location.href = '/posts.html';</script>
+<noscript><meta http-equiv="refresh" content="0;url=/posts.html"></noscript>
+<p>Redirecting to <a href="/posts.html">postcards</a>...</p>

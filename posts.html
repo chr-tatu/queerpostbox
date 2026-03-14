@@ -2,59 +2,149 @@
 layout: posts
 title: All Postcards
 ---
-<div class="posts-header">
-  <div class="view-toggle">
-    <button class="view-btn active" data-view="grid">Grid</button>
-    <button class="view-btn" data-view="column">Column</button>
-  </div>
-</div>
-<div class="postcard-grid" id="postcard-grid" data-total-posts="{{ site.posts.size }}">
-  {% assign visible_posts = 0 %}
-  {% for post in site.posts %}
-    {% assign visible_posts = visible_posts | plus: 1 %}
-    <div class="postcard-item {% if visible_posts > 16 %}hidden{% endif %}" 
-         data-index="{{ visible_posts }}"
-         data-slug="{{ post.slug }}"
-         data-title="{{ post.title | escape }}"
-         data-date="{{ post.date | date: '%B %d, %Y' }}"
-         data-country="{{ post.country }}"
-         data-topic="{{ post.topic }}"
-         data-content="{{ post.content | escape }}"
-         onmouseenter="flipCard(this, true)"
-         onmouseleave="flipCard(this, false)"
-         onclick="openModal(this)">
-      <div class="postcard-link">
-        {% if post.image-front %}
-          <img src="{{ post.image-front | relative_url }}" 
-               alt="{{ post.title }}" 
-               class="postcard-image"
-               data-front="{{ post.image-front | relative_url }}"
-               data-back="{{ post.image-back | relative_url }}">
-        {% else %}
-          <div style="background: #f0f0f0; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
-            No Image
-          </div>
-        {% endif %}
+
+<p class="browse-subtitle">Browse postcards carrying a moment of queer life</p>
+
+<div class="landing-layout">
+  <aside class="sidebar">
+    <div class="filters">
+      <button class="filter-name" data-filter="country">
+        <span class="filter-label">Country</span>
+        <svg class="filter-arrow" width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 1L6 6L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="filter-options" id="country-options">
+        {% assign posts_with_country = site.posts | where_exp: "post", "post.country" %}
+        {% assign countries = posts_with_country | map: "country" | uniq | sort %}
+        {% for country in countries %}
+          <button class="filter-option" data-country="{{ country }}">{{ country }}</button>
+        {% endfor %}
       </div>
     </div>
-  {% endfor %}
+
+  </aside>
+
+  <div class="postcard-grid" id="postcard-grid" data-total-posts="{{ site.posts.size }}">
+    {% assign post_index = 0 %}
+    {% for post in site.posts %}
+      {% assign post_index = post_index | plus: 1 %}
+      {% assign days_ago = "now" | date: "%s" | minus: post.date | date: "%s" %}
+      {% assign is_new = false %}
+      {% if post_index <= 3 %}
+        {% assign is_new = true %}
+      {% endif %}
+      <div class="postcard-item"
+           data-index="{{ post_index }}"
+           data-slug="{{ post.slug }}"
+           data-title="{{ post.title | escape }}"
+           data-date="{{ post.date | date: '%B %d, %Y' }}"
+           data-country="{{ post.country }}"
+           data-topic="{{ post.topic }}"
+           data-content="{{ post.content | escape }}"
+           data-number="{{ post_index }}"
+           onclick="openModal(this)">
+        {% if is_new %}
+          <div class="new-badge">
+            <span>New!</span>
+          </div>
+        {% endif %}
+        <div class="postcard-link">
+          {% if post.image-front %}
+            <img src="{{ post.image-front | relative_url }}"
+                 alt="{{ post.title }}"
+                 class="postcard-image"
+                 loading="lazy"
+                 data-front="{{ post.image-front | relative_url }}"
+                 data-back="{{ post.image-back | relative_url }}">
+          {% else %}
+            <div class="postcard-placeholder">No Image</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
 
-<!-- Modal Structure -->
+<button class="send-postcard-btn">
+  <img class="send-icon" src="{{ '/assets/postcard-icon.svg' | relative_url }}" alt="" aria-hidden="true">
+  <span class="send-label">Send postcard</span>
+</button>
+
+<!-- Postcard Modal -->
 <div id="postcard-modal" class="modal-overlay">
-  <div class="modal-container">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <div class="modal-content">
-      <div class="modal-images"></div>
-      <div class="modal-details">
-        <div class="modal-message"></div>
-        <div class="modal-meta">
-          <div class="modal-info">
-            <span class="modal-country"></span>
-            <span class="modal-date"></span>
+  <div class="modal-backdrop"></div>
+  <div class="modal-postcard-details">
+    <span class="modal-postcard-number"></span>
+    <div class="modal-postcard-wrapper">
+      <div class="modal-card-container">
+        <div class="modal-card-front">
+          <img class="modal-front-img" src="" alt="">
+        </div>
+        <div class="modal-card-back">
+          <img class="modal-back-img" src="" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="modal-bottom-section">
+      <div class="modal-accessibility-btns">
+        <button class="modal-action-btn modal-listen-btn" style="display:none">
+          <svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 14v8h6l8 8V6L9 14H3z" fill="var(--color-gray-5)"/>
+            <path d="M24 8a10 10 0 010 20M20 12a6 6 0 010 12" stroke="var(--color-gray-5)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span class="modal-action-label">Listen</span>
+        </button>
+        <button class="modal-action-btn modal-read-btn" style="display:none">
+          <svg width="40" height="36" viewBox="0 0 44 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <text x="3" y="24" font-family="var(--font-display)" font-weight="800" font-size="28" fill="var(--color-gray-5)">Aa</text>
+          </svg>
+          <span class="modal-action-label">Read</span>
+        </button>
+      </div>
+      <button class="modal-action-btn modal-flip-btn">
+        <svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 4L6 10l6 6" stroke="var(--color-gray-5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M6 10h18c5.523 0 10 4.477 10 10v4" stroke="var(--color-gray-5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span class="modal-action-label">Flip</span>
+      </button>
+    </div>
+    <button class="modal-arrow-down" aria-label="Send a reply">
+      <svg width="32" height="16" viewBox="0 0 32 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L16 12L28 4" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<!-- Reply Info Modal -->
+<div id="reply-modal" class="reply-overlay">
+  <div class="reply-card">
+    <button class="reply-close" aria-label="Close">
+      <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
+    </button>
+    <div class="reply-content">
+      <h2 class="reply-title">To send a reply:</h2>
+      <p class="reply-instruction">Write the same number displayed above the postcard on the top left side of your reply postcard.</p>
+      <div class="reply-postcard-example">
+        <div class="reply-example-number">#123</div>
+        <div class="reply-example-body">
+          <div class="reply-example-left">
+            <p class="reply-example-meta">City, Date</p>
+            <p class="reply-example-heading">Your message</p>
+            <p class="reply-example-text">Write your story, thoughts, or reply here...</p>
+            <p class="reply-example-sign">/Your name (optional)</p>
           </div>
-          <div class="modal-tags">
-            <span class="modal-topic"></span>
+          <div class="reply-example-divider"></div>
+          <div class="reply-example-right">
+            <div class="reply-example-stamp"></div>
+            <div class="reply-example-address">
+              <p>Queer Postbox</p>
+              <p>Street name 23</p>
+              <p>123 32 City</p>
+              <p>Country</p>
+            </div>
           </div>
         </div>
       </div>
@@ -62,3 +152,35 @@ title: All Postcards
   </div>
 </div>
 
+<!-- Send Postcard Modal -->
+<div id="send-modal" class="reply-overlay">
+  <div class="reply-card">
+    <button class="send-modal-close" aria-label="Close">
+      <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
+    </button>
+    <div class="reply-content">
+      <h2 class="reply-title">Send a postcard</h2>
+      <p class="reply-instruction">Write your story, thoughts, or message on a postcard and post it to:</p>
+      <div class="reply-postcard-example">
+        <div class="reply-example-body">
+          <div class="reply-example-left">
+            <p class="reply-example-meta">City, Date</p>
+            <p class="reply-example-heading">Your message</p>
+            <p class="reply-example-text">Write your story, thoughts, or message here...</p>
+            <p class="reply-example-sign">/Your name (optional)</p>
+          </div>
+          <div class="reply-example-divider"></div>
+          <div class="reply-example-right">
+            <div class="reply-example-stamp"></div>
+            <div class="reply-example-address">
+              <p>Queer Postbox</p>
+              <p>Street name 23</p>
+              <p>123 32 City</p>
+              <p>Country</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
