@@ -1,0 +1,19 @@
+---
+layout: default
+---
+
+<article class="postcard-detail">
+  <header class="postcard-header">
+    <h1>{{ page.title }}</h1>
+    <div class="postcard-meta">
+      <p><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
+      <p><strong>Country:</strong> {{ page.country }}</p>
+      <p><strong>Topic:</strong> {{ page.topic }}</p>
+    </div>
+  </header>
+  <div class="postcard-images">
+    <img src="{{ page.image-front }}" alt="Postcard Front">
+    {{ content }}
+    <img src="{{ page.image-back }}" alt="Postcard Back">
+  </div>
+</article>

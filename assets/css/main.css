@@ -1,0 +1,118 @@
+/* Design Tokens */
+:root {
+  /* Primary */
+  --color-lavender-dark: #5441AB;
+  --color-lavender: #907EDF;
+  --color-lavender-bright: #C9BDFF;
+
+  /* Accent (rainbow) */
+  --color-yellow: #FDE076;
+  --color-orange: #FDAC88;
+  --color-pink: #FF99AE;
+  --color-green: #9BD0B0;
+  --color-blue: #8ED9DF;
+  --color-purple: #D9AAE1;
+
+  /* Neutrals */
+  --color-white: #FFFCFA;
+  --color-light-1: #FFFAF5;
+  --color-light-2: #F8F2EB;
+  --color-gray-1: #ECE7E3;
+  --color-gray-2: #CAC2C2;
+  --color-gray-3: #9B8C9B;
+  --color-gray-4: #726A78;
+  --color-gray-5: #4A4755;
+  --color-black: #100E0E;
+
+  /* Special */
+  --color-overlay: rgba(40, 36, 58, 0.63);
+  --color-warning: #FE093B;
+
+  /* Fonts */
+  --font-display: 'Albert Sans', sans-serif;
+  --font-body: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', sans-serif;
+}
+
+/* Reset */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.28px;
+  color: var(--color-gray-5);
+  background-color: var(--color-white);
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--color-white);
+  padding: 32px 25px 0;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.logo-queer {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -1.68px;
+  color: var(--color-lavender);
+  display: block;
+}
+
+.logo-postbox {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.96px;
+  color: var(--color-gray-5);
+  display: block;
+  margin-top: -6px;
+}
+
+.logo-subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.5px;
+  color: var(--color-gray-4);
+  display: block;
+  margin-top: 4px;
+  text-decoration: none;
+}
+
+.logo-lines {
+  position: absolute;
+  top: 0;
+  left: 130px;
+  width: 120px;
+  height: 68px;
+}
+
+/* Page content */
+.page-content {
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .site-header {
+    padding: 16px;
+  }
+}

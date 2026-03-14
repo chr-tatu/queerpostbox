@@ -1,0 +1,725 @@
+/* Browse subtitle */
+.browse-subtitle {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.28px;
+  color: var(--color-gray-4);
+  text-align: center;
+  margin: 16px 0 8px;
+  position: sticky;
+  top: 100px;
+  z-index: 49;
+  background: var(--color-white);
+  padding: 8px 0;
+}
+
+/* Landing layout: sidebar + grid */
+.landing-layout {
+  display: flex;
+  padding: 0 32px 32px;
+  gap: 16px;
+  min-height: calc(100vh - 180px);
+}
+
+/* Sidebar */
+.sidebar {
+  flex-shrink: 0;
+  width: 155px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 2px;
+  border-radius: 16px;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 32px 0;
+}
+
+.filter-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-gray-5);
+  transition: color 0.2s;
+}
+
+.filter-name:hover {
+  color: var(--color-lavender);
+}
+
+.filter-name.expanded .filter-arrow {
+  transform: rotate(90deg);
+}
+
+.filter-name.expanded .filter-label {
+  font-weight: 700;
+}
+
+.filter-arrow {
+  width: 7px;
+  height: 12px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.filter-options {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 0 8px 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.filter-options.open {
+  display: flex;
+}
+
+.filter-option {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-gray-4);
+  text-align: left;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.filter-option:hover {
+  background: var(--color-light-2);
+  color: var(--color-gray-5);
+}
+
+.filter-option.active {
+  background: var(--color-lavender-bright);
+  color: var(--color-lavender-dark);
+  font-weight: 700;
+}
+
+/* Send postcard button — fixed bottom-left */
+.send-postcard-btn {
+  position: fixed;
+  bottom: 32px;
+  left: 32px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px 14px 8px;
+  border-radius: 16px;
+  transition: box-shadow 0.3s ease;
+}
+
+.send-postcard-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: conic-gradient(
+    from var(--rainbow-angle, 0deg),
+    var(--color-pink),
+    var(--color-orange),
+    var(--color-yellow),
+    var(--color-green),
+    var(--color-blue),
+    var(--color-purple),
+    var(--color-pink)
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.send-postcard-btn:hover::before {
+  opacity: 1;
+  animation: rainbow-spin 3s linear infinite;
+}
+
+.send-postcard-btn:hover {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 153, 174, 0.15),
+      rgba(253, 172, 136, 0.15),
+      rgba(253, 224, 118, 0.15),
+      rgba(155, 208, 176, 0.15),
+      rgba(142, 217, 223, 0.15),
+      rgba(217, 170, 225, 0.15)
+    ),
+    var(--color-white);
+  background-size: 300% 300%, auto;
+  animation: rainbow-glow 3s linear infinite, rainbow-bg 4s ease infinite;
+  box-shadow:
+    0 0 12px rgba(255, 153, 174, 0.4),
+    0 0 24px rgba(253, 224, 118, 0.3),
+    0 0 36px rgba(142, 217, 223, 0.3);
+}
+
+@keyframes rainbow-bg {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes rainbow-spin {
+  to { --rainbow-angle: 360deg; }
+}
+
+@keyframes rainbow-glow {
+  0%   { box-shadow: 0 0 14px rgba(255, 153, 174, 0.5), 0 0 28px rgba(255, 153, 174, 0.2); }
+  17%  { box-shadow: 0 0 14px rgba(253, 172, 136, 0.5), 0 0 28px rgba(253, 172, 136, 0.2); }
+  33%  { box-shadow: 0 0 14px rgba(253, 224, 118, 0.5), 0 0 28px rgba(253, 224, 118, 0.2); }
+  50%  { box-shadow: 0 0 14px rgba(155, 208, 176, 0.5), 0 0 28px rgba(155, 208, 176, 0.2); }
+  67%  { box-shadow: 0 0 14px rgba(142, 217, 223, 0.5), 0 0 28px rgba(142, 217, 223, 0.2); }
+  83%  { box-shadow: 0 0 14px rgba(217, 170, 225, 0.5), 0 0 28px rgba(217, 170, 225, 0.2); }
+  100% { box-shadow: 0 0 14px rgba(255, 153, 174, 0.5), 0 0 28px rgba(255, 153, 174, 0.2); }
+}
+
+@property --rainbow-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.send-icon {
+  width: 52px;
+  height: 36px;
+  transition: transform 0.3s ease;
+}
+
+.send-postcard-btn:hover .send-icon {
+  transform: rotate(-6deg) translateY(-2px);
+}
+
+.send-label {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-gray-4);
+}
+
+/* Masonry postcard grid */
+.postcard-grid {
+  flex: 1;
+  columns: 3;
+  column-gap: 16px;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(84, 65, 171, 0.2);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.postcard-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.postcard-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(84, 65, 171, 0.3);
+}
+
+.postcard-link {
+  display: block;
+  width: 100%;
+}
+
+.postcard-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.postcard-placeholder {
+  background: var(--color-light-2);
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-gray-3);
+  font-family: var(--font-display);
+}
+
+/* "New!" badge */
+.new-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 81px;
+  height: 81px;
+  overflow: hidden;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.new-badge span {
+  display: block;
+  position: absolute;
+  top: 18px;
+  left: -12px;
+  width: 100px;
+  text-align: center;
+  transform: rotate(-45deg);
+  background: var(--color-lavender-dark);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 4px 0;
+}
+
+/* Hidden items for filtering */
+.postcard-item.filtered-out {
+  display: none;
+}
+
+/* ==================== */
+/* Modal Overlay         */
+/* ==================== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.modal-overlay.active {
+  display: block;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-overlay);
+}
+
+.modal-postcard-details {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 800px;
+  width: 85vw;
+  max-height: 90vh;
+}
+
+.modal-postcard-number {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--color-white);
+  align-self: flex-start;
+  margin-bottom: 8px;
+  padding-left: 4px;
+}
+
+/* Card flip container */
+.modal-postcard-wrapper {
+  width: 100%;
+  perspective: 1200px;
+}
+
+.modal-card-container {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+}
+
+.modal-card-front {
+  width: 100%;
+  backface-visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.modal-card-back {
+  width: 100%;
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.modal-card-container.flipped .modal-card-front {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.modal-card-container.flipped .modal-card-back {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-front-img,
+.modal-back-img {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  display: block;
+  border-radius: 2px;
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.66), 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Bottom section: accessibility + flip */
+.modal-bottom-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.modal-accessibility-btns {
+  display: flex;
+  gap: 16px;
+}
+
+.modal-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: var(--color-white);
+  border: none;
+  border-radius: 32px;
+  width: 64px;
+  height: 64px;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  justify-content: center;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.modal-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.modal-action-label {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 14px;
+  text-transform: uppercase;
+  color: var(--color-white);
+  position: absolute;
+  margin-top: 78px;
+  pointer-events: none;
+}
+
+/* Down arrow to reply */
+.modal-arrow-down {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-top: 16px;
+  padding: 8px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ==================== */
+/* Reply Info Modal      */
+/* ==================== */
+.reply-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.reply-overlay.active {
+  display: flex;
+}
+
+.reply-card {
+  background: var(--color-white);
+  border-radius: 16px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 490px;
+  max-width: 95vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.reply-close,
+.send-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 0;
+}
+
+.reply-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.reply-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--color-black);
+  text-align: center;
+}
+
+.reply-instruction {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.28px;
+  color: var(--color-black);
+  text-align: center;
+  max-width: 400px;
+}
+
+/* Example postcard in reply modal */
+.reply-postcard-example {
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-1);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 420px;
+  max-width: 100%;
+  padding: 20px 24px;
+  position: relative;
+  border-radius: 2px;
+}
+
+.reply-example-number {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 20px;
+  color: var(--color-black);
+  border: 2px solid var(--color-warning);
+  display: inline-block;
+  padding: 2px 8px;
+  margin-bottom: 8px;
+}
+
+.reply-example-body {
+  display: flex;
+  gap: 0;
+  min-height: 200px;
+}
+
+.reply-example-left {
+  flex: 1;
+  padding-right: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--color-black);
+}
+
+.reply-example-meta {
+  font-style: italic;
+  color: var(--color-gray-3);
+  margin-bottom: 8px;
+  text-align: right;
+}
+
+.reply-example-heading {
+  font-style: italic;
+  margin-bottom: 8px;
+  text-decoration: underline;
+}
+
+.reply-example-text {
+  font-style: italic;
+  color: var(--color-gray-3);
+  margin-bottom: 12px;
+}
+
+.reply-example-sign {
+  font-style: italic;
+}
+
+.reply-example-divider {
+  width: 1px;
+  background: var(--color-gray-2);
+  flex-shrink: 0;
+}
+
+.reply-example-right {
+  flex: 1;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.reply-example-stamp {
+  width: 39px;
+  height: 46px;
+  border: 1px solid var(--color-black);
+  margin-bottom: 16px;
+}
+
+.reply-example-address {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: right;
+  color: var(--color-black);
+  text-decoration: underline;
+}
+
+.reply-address {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 1.28px;
+  color: var(--color-black);
+  text-align: center;
+}
+
+.reply-address p {
+  margin: 0;
+}
+
+/* ==================== */
+/* Responsive            */
+/* ==================== */
+@media (max-width: 1024px) {
+  .postcard-grid {
+    columns: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-layout {
+    flex-direction: column;
+    padding: 0 16px 16px;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .filters {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .filter-options.open {
+    position: absolute;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-1);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    z-index: 100;
+    max-height: 300px;
+    top: 100%;
+    left: 0;
+  }
+
+  .filter-name {
+    position: relative;
+  }
+
+  .send-postcard-btn {
+    bottom: 16px;
+    left: 16px;
+    background: var(--color-white);
+  }
+
+  .send-icon {
+    width: 40px;
+    height: 28px;
+  }
+
+  .send-label {
+    font-size: 13px;
+  }
+
+  .reply-card {
+    width: 95vw;
+    max-height: 85vh;
+    padding: 12px;
+  }
+
+  .reply-postcard-example {
+    width: 100%;
+    padding: 14px 16px;
+  }
+
+  .postcard-grid {
+    columns: 2;
+    padding: 12px;
+  }
+
+  .modal-postcard-details {
+    width: 95vw;
+  }
+
+  .reply-card {
+    width: 95vw;
+  }
+
+  .reply-postcard-example {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .postcard-grid {
+    columns: 1;
+  }
+}
