@@ -14,6 +14,7 @@ function initFilters() {
       if (options) {
         btn.classList.toggle('expanded');
         options.classList.toggle('open');
+        btn.setAttribute('aria-expanded', btn.classList.contains('expanded'));
       }
     });
   });
@@ -70,15 +71,17 @@ function openModal(postcardElement) {
   const imgEl = postcardElement.querySelector('.postcard-image');
   const frontSrc = imgEl ? imgEl.dataset.front : '';
   const backSrc = imgEl ? imgEl.dataset.back : '';
-  const title = postcardElement.dataset.title;
+  const title = postcardElement.dataset.title || '';
   const number = postcardElement.dataset.number;
   const slug = postcardElement.dataset.slug;
+
+  if (!frontSrc) return;
 
   // Set content
   frontImg.src = frontSrc;
   frontImg.alt = title + ' - Front';
-  backImg.src = backSrc;
-  backImg.alt = title + ' - Back';
+  backImg.src = backSrc || '';
+  backImg.alt = backSrc ? title + ' - Back' : '';
   numberEl.textContent = '#' + number;
 
   // Reset flip state
@@ -91,13 +94,16 @@ function openModal(postcardElement) {
   // Show modal
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
+  modal.querySelector('.modal-flip-btn').focus();
 }
 
-function closeModal() {
+function closeModal(fromPopstate) {
   const modal = document.getElementById('postcard-modal');
   modal.classList.remove('active');
   document.body.style.overflow = '';
-  history.pushState(null, '', window.location.pathname);
+  if (!fromPopstate) {
+    history.pushState(null, '', window.location.pathname);
+  }
   currentPostcard = null;
   isFlipped = false;
 }
@@ -143,6 +149,7 @@ function openModalBySlug(slug) {
 function openReplyModal() {
   const replyModal = document.getElementById('reply-modal');
   replyModal.classList.add('active');
+  replyModal.querySelector('.reply-close').focus();
 }
 
 function closeReplyModal() {
@@ -156,6 +163,7 @@ function closeReplyModal() {
 function openSendModal() {
   const sendModal = document.getElementById('send-modal');
   sendModal.classList.add('active');
+  sendModal.querySelector('.send-modal-close').focus();
 }
 
 function closeSendModal() {
@@ -236,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (event.state && event.state.postcardSlug) {
       openModalBySlug(event.state.postcardSlug);
     } else {
-      closeModal();
+      closeModal(true);
     }
   });
 

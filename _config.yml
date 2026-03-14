@@ -29,6 +29,13 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 # github_username:  jekyll
 
+# Mailing address (shown in reply/send modals)
+mailing_address:
+  name: "Queer Postbox"
+  street: "Street name 23"
+  postal: "123 32 City"
+  country: "Country"
+
 # Build settings
 # theme: jekyll-theme-minimal
 # theme: minima

@@ -163,16 +163,18 @@
 }
 
 .send-postcard-btn:hover {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 153, 174, 0.15),
-    rgba(253, 172, 136, 0.15),
-    rgba(253, 224, 118, 0.15),
-    rgba(155, 208, 176, 0.15),
-    rgba(142, 217, 223, 0.15),
-    rgba(217, 170, 225, 0.15)
-  );
-  background-size: 300% 300%;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 153, 174, 0.15),
+      rgba(253, 172, 136, 0.15),
+      rgba(253, 224, 118, 0.15),
+      rgba(155, 208, 176, 0.15),
+      rgba(142, 217, 223, 0.15),
+      rgba(217, 170, 225, 0.15)
+    ),
+    var(--color-white);
+  background-size: 300% 300%, auto;
   animation: rainbow-glow 3s linear infinite, rainbow-bg 4s ease infinite;
   box-shadow:
     0 0 12px rgba(255, 153, 174, 0.4),
@@ -676,7 +678,6 @@
     bottom: 16px;
     left: 16px;
     background: var(--color-white);
-    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
   }
 
   .send-icon {

@@ -8,13 +8,13 @@ title: All Postcards
 <div class="landing-layout">
   <aside class="sidebar">
     <div class="filters">
-      <button class="filter-name" data-filter="country">
+      <button class="filter-name" data-filter="country" aria-expanded="false" aria-controls="country-options">
         <span class="filter-label">Country</span>
         <svg class="filter-arrow" width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M1 1L6 6L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-      <div class="filter-options" id="country-options">
+      <div class="filter-options" id="country-options" role="listbox">
         {% assign posts_with_country = site.posts | where_exp: "post", "post.country" %}
         {% assign countries = posts_with_country | map: "country" | uniq | sort %}
         {% for country in countries %}
@@ -72,7 +72,7 @@ title: All Postcards
 </button>
 
 <!-- Postcard Modal -->
-<div id="postcard-modal" class="modal-overlay">
+<div id="postcard-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Postcard viewer">
   <div class="modal-backdrop"></div>
   <div class="modal-postcard-details">
     <span class="modal-postcard-number"></span>
@@ -119,7 +119,7 @@ title: All Postcards
 </div>
 
 <!-- Reply Info Modal -->
-<div id="reply-modal" class="reply-overlay">
+<div id="reply-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a reply">
   <div class="reply-card">
     <button class="reply-close" aria-label="Close">
       <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
@@ -140,10 +140,10 @@ title: All Postcards
           <div class="reply-example-right">
             <div class="reply-example-stamp"></div>
             <div class="reply-example-address">
-              <p>Queer Postbox</p>
-              <p>Street name 23</p>
-              <p>123 32 City</p>
-              <p>Country</p>
+              <p>{{ site.mailing_address.name }}</p>
+              <p>{{ site.mailing_address.street }}</p>
+              <p>{{ site.mailing_address.postal }}</p>
+              <p>{{ site.mailing_address.country }}</p>
             </div>
           </div>
         </div>
@@ -153,7 +153,7 @@ title: All Postcards
 </div>
 
 <!-- Send Postcard Modal -->
-<div id="send-modal" class="reply-overlay">
+<div id="send-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a postcard">
   <div class="reply-card">
     <button class="send-modal-close" aria-label="Close">
       <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
@@ -173,10 +173,10 @@ title: All Postcards
           <div class="reply-example-right">
             <div class="reply-example-stamp"></div>
             <div class="reply-example-address">
-              <p>Queer Postbox</p>
-              <p>Street name 23</p>
-              <p>123 32 City</p>
-              <p>Country</p>
+              <p>{{ site.mailing_address.name }}</p>
+              <p>{{ site.mailing_address.street }}</p>
+              <p>{{ site.mailing_address.postal }}</p>
+              <p>{{ site.mailing_address.country }}</p>
             </div>
           </div>
         </div>
