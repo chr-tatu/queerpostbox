@@ -67,7 +67,7 @@ title: All Postcards
 </div>
 
 <button class="send-postcard-btn">
-  <img class="send-icon" src="{{ '/assets/postcard-icon.svg' | relative_url }}" alt="" aria-hidden="true">
+  <img class="send-icon" src="{{ '/assets/icons/postcard.svg' | relative_url }}" alt="" aria-hidden="true">
   <span class="send-label">Send postcard</span>
 </button>
 
@@ -89,25 +89,14 @@ title: All Postcards
     <div class="modal-bottom-section">
       <div class="modal-accessibility-btns">
         <button class="modal-action-btn modal-listen-btn" style="display:none">
-          <svg width="40" height="36" viewBox="0 0 40 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3 14v8h6l8 8V6L9 14H3z" fill="var(--color-gray-5)"/>
-            <path d="M24 8a10 10 0 010 20M20 12a6 6 0 010 12" stroke="var(--color-gray-5)" stroke-width="2" stroke-linecap="round" fill="none"/>
-          </svg>
-          <span class="modal-action-label">Listen</span>
+          <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="modal-action-icon">
         </button>
         <button class="modal-action-btn modal-read-btn" style="display:none">
-          <svg width="40" height="36" viewBox="0 0 44 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <text x="3" y="24" font-family="var(--font-display)" font-weight="800" font-size="28" fill="var(--color-gray-5)">Aa</text>
-          </svg>
-          <span class="modal-action-label">Read</span>
+          <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="modal-action-icon">
         </button>
       </div>
       <button class="modal-action-btn modal-flip-btn">
-        <svg width="40" height="28" viewBox="0 0 40 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 4L6 10l6 6" stroke="var(--color-gray-5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          <path d="M6 10h18c5.523 0 10 4.477 10 10v4" stroke="var(--color-gray-5)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        </svg>
-        <span class="modal-action-label">Flip</span>
+        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="modal-action-icon">
       </button>
     </div>
     <button class="modal-arrow-down" aria-label="Send a reply">
@@ -122,7 +111,7 @@ title: All Postcards
 <div id="reply-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a reply">
   <div class="reply-card">
     <button class="reply-close" aria-label="Close">
-      <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
+      <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="20" height="20">
     </button>
     <div class="reply-content">
       <h2 class="reply-title">To send a reply:</h2>
@@ -156,7 +145,7 @@ title: All Postcards
 <div id="send-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a postcard">
   <div class="reply-card">
     <button class="send-modal-close" aria-label="Close">
-      <img src="{{ '/assets/close-icon.svg' | relative_url }}" alt="Close" width="20" height="20">
+      <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="20" height="20">
     </button>
     <div class="reply-content">
       <h2 class="reply-title">Send a postcard</h2>
