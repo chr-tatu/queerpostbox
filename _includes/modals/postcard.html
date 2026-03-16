@@ -1,0 +1,40 @@
+<!-- Postcard Modal -->
+<div id="postcard-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Postcard viewer">
+  <div class="modal-backdrop"></div>
+  <div class="modal-postcard-details">
+    <div class="modal-top-row">
+      <span class="modal-postcard-number"></span>
+      <button class="modal-close-btn" aria-label="Close">
+        <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="24" height="24">
+      </button>
+    </div>
+    <div class="modal-postcard-wrapper">
+      <div class="modal-card-container">
+        <div class="modal-card-front">
+          <img class="modal-front-img" src="" alt="">
+        </div>
+        <div class="modal-card-back">
+          <img class="modal-back-img" src="" alt="">
+        </div>
+      </div>
+    </div>
+    <div class="modal-bottom-section">
+      <div class="modal-accessibility-btns">
+        <button class="modal-action-btn modal-listen-btn" style="display:none">
+          <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="modal-action-icon">
+        </button>
+        <button class="modal-action-btn modal-read-btn" style="display:none">
+          <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="modal-action-icon">
+        </button>
+      </div>
+      <button class="modal-action-btn modal-flip-btn">
+        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="modal-action-icon">
+      </button>
+    </div>
+    <button class="modal-arrow-down" aria-label="Send a reply">
+      <svg width="32" height="16" viewBox="0 0 32 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 4L16 12L28 4" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>

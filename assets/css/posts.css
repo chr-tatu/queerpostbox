@@ -338,14 +338,34 @@
   max-height: 90vh;
 }
 
+.modal-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
 .modal-postcard-number {
   font-family: var(--font-display);
   font-weight: 500;
   font-size: 24px;
   color: var(--color-white);
-  align-self: flex-start;
-  margin-bottom: 8px;
   padding-left: 4px;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 0;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.2s;
+}
+
+.modal-close-btn:hover {
+  opacity: 0.7;
 }
 
 /* Card flip container */
@@ -602,19 +622,6 @@
   text-decoration: underline;
 }
 
-.reply-address {
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 20px;
-  letter-spacing: 1.28px;
-  color: var(--color-black);
-  text-align: center;
-}
-
-.reply-address p {
-  margin: 0;
-}
-
 /* ==================== */
 /* Responsive            */
 /* ==================== */
@@ -694,14 +701,6 @@
 
   .modal-postcard-details {
     width: 95vw;
-  }
-
-  .reply-card {
-    width: 95vw;
-  }
-
-  .reply-postcard-example {
-    width: 100%;
   }
 }
 
