@@ -1,6 +1,9 @@
 // State
 let currentPostcard = null;
 let isFlipped = false;
+let lastScrollY = window.scrollY;
+let scrollDirection = 'down';
+let currentHoveredItem = null;
 
 // Cached DOM references (set in DOMContentLoaded)
 let postcardModal, replyModal, sendModal, cardContainer;
@@ -250,5 +253,151 @@ document.addEventListener('DOMContentLoaded', function() {
 
   postcardModal.querySelector('.modal-read-btn').addEventListener('click', function(e) {
     e.stopPropagation();
+  });
+
+  // ==================
+  // Scroll Inertia Effect
+  // ==================
+  const postcardItems = document.querySelectorAll('.postcard-item');
+
+  // Each card tracks its own offset that lags behind scroll
+  var cardOffsets = new Array(postcardItems.length);
+  var cardRandomFactors = new Array(postcardItems.length);
+  for (var ci = 0; ci < cardOffsets.length; ci++) {
+    cardOffsets[ci] = 0;
+    cardRandomFactors[ci] = 0.6 + Math.random() * 0.8; // 0.6 to 1.4
+  }
+
+  var scrollDelta = 0;
+  var inertiaRunning = false;
+
+  window.addEventListener('scroll', function() {
+    var currentY = window.scrollY;
+    scrollDelta += currentY - lastScrollY;
+    lastScrollY = currentY;
+
+    if (!inertiaRunning) {
+      inertiaRunning = true;
+      requestAnimationFrame(tickInertia);
+    }
+  }, { passive: true });
+
+  function tickInertia() {
+    var anyMoving = false;
+
+    postcardItems.forEach(function(item, i) {
+      if (item.classList.contains('filtered-out')) {
+        cardOffsets[i] = 0;
+        item.style.transform = '';
+        return;
+      }
+
+      // Push offset by scroll delta, scaled by card's viewport position
+      // Cards further from viewport center get more lag
+      var rect = item.getBoundingClientRect();
+      var viewCenter = window.innerHeight / 2;
+      var cardCenter = rect.top + rect.height / 2;
+      var distFromCenter = Math.abs(cardCenter - viewCenter) / viewCenter;
+      var lagFactor = 0.4 + distFromCenter * 0.6; // 0.4 to 1.0
+
+      cardOffsets[i] += scrollDelta * lagFactor * cardRandomFactors[i] * 0.7;
+
+      // Clamp
+      cardOffsets[i] = Math.max(-50, Math.min(50, cardOffsets[i]));
+
+      // Lerp back toward 0 (this creates the "catching up" feel)
+      cardOffsets[i] *= 0.9;
+
+      if (Math.abs(cardOffsets[i]) > 0.3) {
+        item.style.transform = 'translateY(' + cardOffsets[i].toFixed(1) + 'px)';
+        anyMoving = true;
+      } else {
+        cardOffsets[i] = 0;
+        item.style.transform = '';
+      }
+    });
+
+    scrollDelta = 0;
+
+    if (anyMoving) {
+      requestAnimationFrame(tickInertia);
+    } else {
+      inertiaRunning = false;
+    }
+  }
+
+  // ==================
+  // Neighbor Displacement on Hover
+  // ==================
+  var grid = document.getElementById('postcard-grid');
+  var allItems = Array.from(postcardItems);
+
+  function clearNeighborShifts() {
+    allItems.forEach(function(item) {
+      item.style.translate = '';
+    });
+  }
+
+  function getVisibleItems() {
+    return allItems.filter(function(item) {
+      return !item.classList.contains('filtered-out');
+    });
+  }
+
+  function shiftNeighbors(hoveredItem) {
+    var hoveredRect = hoveredItem.getBoundingClientRect();
+    var hCx = hoveredRect.left + hoveredRect.width / 2;
+    var hCy = hoveredRect.top + hoveredRect.height / 2;
+    var visible = getVisibleItems();
+
+    visible.forEach(function(item) {
+      if (item === hoveredItem) return;
+      var rect = item.getBoundingClientRect();
+      var cx = rect.left + rect.width / 2;
+      var cy = rect.top + rect.height / 2;
+      var dx = cx - hCx;
+      var dy = cy - hCy;
+      var dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist === 0) return;
+
+      // Normalize direction (away from hovered)
+      var ux = dx / dist;
+      var uy = dy / dist;
+
+      // Strength tiers: immediate neighbors get strong push, farther ones lighter
+      var strength = 0;
+      if (dist < 250) {
+        strength = 8;
+      } else if (dist < 500) {
+        strength = 4;
+      } else if (dist < 750) {
+        strength = 2;
+      }
+
+      if (strength > 0) {
+        item.style.translate = (ux * strength).toFixed(1) + 'px ' + (uy * strength).toFixed(1) + 'px';
+      }
+    });
+  }
+
+  grid.addEventListener('mouseover', function(e) {
+    var item = e.target.closest('.postcard-item');
+    if (!item) {
+      // Cursor is over grid gaps — clear displacement
+      if (currentHoveredItem) {
+        clearNeighborShifts();
+        currentHoveredItem = null;
+      }
+      return;
+    }
+    if (item === currentHoveredItem) return;
+    clearNeighborShifts();
+    currentHoveredItem = item;
+    shiftNeighbors(item);
+  });
+
+  grid.addEventListener('mouseleave', function() {
+    clearNeighborShifts();
+    currentHoveredItem = null;
   });
 });

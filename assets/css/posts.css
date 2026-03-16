@@ -242,12 +242,17 @@
   cursor: pointer;
   border-radius: 4px;
   overflow: hidden;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: scale 0.15s ease-out, box-shadow 0.15s ease-out, translate 0.2s ease-out;
+  transform-origin: center;
+  will-change: transform, scale;
+  translate: 0 0;
+  scale: 1;
 }
 
 .postcard-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(84, 65, 171, 0.3);
+  scale: 1.04;
+  box-shadow: 0 6px 16px rgba(84, 65, 171, 0.35);
+  z-index: 2;
 }
 
 .postcard-link {
