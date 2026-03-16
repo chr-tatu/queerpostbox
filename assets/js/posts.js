@@ -2,6 +2,10 @@
 let currentPostcard = null;
 let isFlipped = false;
 
+// Cached DOM references (set in DOMContentLoaded)
+let postcardModal, replyModal, sendModal, cardContainer;
+let frontImg, backImg, numberEl;
+
 // ==================
 // Country Filter
 // ==================
@@ -55,15 +59,20 @@ function clearFilter() {
 }
 
 // ==================
-// Modal
+// Modal Helpers
+// ==================
+function setModalActive(modal, active) {
+  modal.classList.toggle('active', active);
+  if (active) {
+    const focusTarget = modal.querySelector('.reply-close, .send-modal-close, .modal-flip-btn');
+    if (focusTarget) focusTarget.focus();
+  }
+}
+
+// ==================
+// Postcard Modal
 // ==================
 function openModal(postcardElement) {
-  const modal = document.getElementById('postcard-modal');
-  const frontImg = modal.querySelector('.modal-front-img');
-  const backImg = modal.querySelector('.modal-back-img');
-  const numberEl = modal.querySelector('.modal-postcard-number');
-  const cardContainer = modal.querySelector('.modal-card-container');
-
   currentPostcard = postcardElement;
   isFlipped = false;
 
@@ -73,7 +82,7 @@ function openModal(postcardElement) {
   const backSrc = imgEl ? imgEl.dataset.back : '';
   const title = postcardElement.dataset.title || '';
   const number = postcardElement.dataset.number;
-  const slug = postcardElement.dataset.slug;
+  const permalink = postcardElement.dataset.permalink;
 
   if (!frontSrc) return;
 
@@ -88,44 +97,34 @@ function openModal(postcardElement) {
   cardContainer.classList.remove('flipped');
   updateModalButtons();
 
-  // Update URL
-  history.pushState({ postcardSlug: slug }, title, '#' + slug);
+  // Update URL to real postcard permalink
+  history.pushState({ postcardSlug: postcardElement.dataset.slug }, title, permalink);
 
   // Show modal
-  modal.classList.add('active');
+  postcardModal.classList.add('active');
   document.body.style.overflow = 'hidden';
-  modal.querySelector('.modal-flip-btn').focus();
+  postcardModal.querySelector('.modal-flip-btn').focus();
 }
 
 function closeModal(fromPopstate) {
-  const modal = document.getElementById('postcard-modal');
-  modal.classList.remove('active');
+  postcardModal.classList.remove('active');
   document.body.style.overflow = '';
   if (!fromPopstate) {
-    history.pushState(null, '', window.location.pathname);
+    history.pushState(null, '', '/posts.html');
   }
   currentPostcard = null;
   isFlipped = false;
 }
 
 function flipCard() {
-  const modal = document.getElementById('postcard-modal');
-  const cardContainer = modal.querySelector('.modal-card-container');
-
   isFlipped = !isFlipped;
-
-  if (isFlipped) {
-    cardContainer.classList.add('flipped');
-  } else {
-    cardContainer.classList.remove('flipped');
-  }
-
+  cardContainer.classList.toggle('flipped', isFlipped);
   updateModalButtons();
 }
 
 function updateModalButtons() {
-  const listenBtn = document.querySelector('.modal-listen-btn');
-  const readBtn = document.querySelector('.modal-read-btn');
+  const listenBtn = postcardModal.querySelector('.modal-listen-btn');
+  const readBtn = postcardModal.querySelector('.modal-read-btn');
 
   if (isFlipped) {
     listenBtn.style.display = 'flex';
@@ -144,95 +143,85 @@ function openModalBySlug(slug) {
 }
 
 // ==================
-// Reply Modal
-// ==================
-function openReplyModal() {
-  const replyModal = document.getElementById('reply-modal');
-  replyModal.classList.add('active');
-  replyModal.querySelector('.reply-close').focus();
-}
-
-function closeReplyModal() {
-  const replyModal = document.getElementById('reply-modal');
-  replyModal.classList.remove('active');
-}
-
-// ==================
-// Send Postcard Modal
-// ==================
-function openSendModal() {
-  const sendModal = document.getElementById('send-modal');
-  sendModal.classList.add('active');
-  sendModal.querySelector('.send-modal-close').focus();
-}
-
-function closeSendModal() {
-  const sendModal = document.getElementById('send-modal');
-  sendModal.classList.remove('active');
-}
-
-// ==================
 // Event Listeners
 // ==================
 document.addEventListener('DOMContentLoaded', function() {
+  // Cache DOM references
+  postcardModal = document.getElementById('postcard-modal');
+  replyModal = document.getElementById('reply-modal');
+  sendModal = document.getElementById('send-modal');
+  cardContainer = postcardModal.querySelector('.modal-card-container');
+  frontImg = postcardModal.querySelector('.modal-front-img');
+  backImg = postcardModal.querySelector('.modal-back-img');
+  numberEl = postcardModal.querySelector('.modal-postcard-number');
+
   initFilters();
 
+  // Delegated click handler for postcard grid
+  document.getElementById('postcard-grid').addEventListener('click', function(e) {
+    const item = e.target.closest('.postcard-item');
+    if (item) openModal(item);
+  });
+
   // Flip button
-  document.querySelector('.modal-flip-btn').addEventListener('click', function(e) {
+  postcardModal.querySelector('.modal-flip-btn').addEventListener('click', function(e) {
     e.stopPropagation();
     flipCard();
   });
 
-  // Close modal on backdrop click
-  document.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+  // Close modal on backdrop or close button click
+  postcardModal.addEventListener('click', function(e) {
+    if (e.target === postcardModal || e.target.closest('.modal-backdrop')) {
+      closeModal();
+    }
+  });
+  postcardModal.querySelector('.modal-close-btn').addEventListener('click', function() { closeModal(); });
 
   // Arrow down → reply
-  document.querySelector('.modal-arrow-down').addEventListener('click', function(e) {
+  postcardModal.querySelector('.modal-arrow-down').addEventListener('click', function(e) {
     e.stopPropagation();
-    openReplyModal();
+    setModalActive(replyModal, true);
   });
 
   // Reply close
-  document.querySelector('.reply-close').addEventListener('click', function(e) {
+  replyModal.querySelector('.reply-close').addEventListener('click', function(e) {
     e.stopPropagation();
-    closeReplyModal();
+    setModalActive(replyModal, false);
   });
 
   // Reply overlay click → close reply
-  document.getElementById('reply-modal').addEventListener('click', function(e) {
+  replyModal.addEventListener('click', function(e) {
     if (e.target === this) {
-      closeReplyModal();
+      setModalActive(replyModal, false);
     }
   });
 
   // Send postcard button
   document.querySelector('.send-postcard-btn').addEventListener('click', function(e) {
     e.stopPropagation();
-    openSendModal();
+    setModalActive(sendModal, true);
   });
 
   // Send modal close
-  document.querySelector('.send-modal-close').addEventListener('click', function(e) {
+  sendModal.querySelector('.send-modal-close').addEventListener('click', function(e) {
     e.stopPropagation();
-    closeSendModal();
+    setModalActive(sendModal, false);
   });
 
   // Send modal overlay click → close
-  document.getElementById('send-modal').addEventListener('click', function(e) {
+  sendModal.addEventListener('click', function(e) {
     if (e.target === this) {
-      closeSendModal();
+      setModalActive(sendModal, false);
     }
   });
 
   // Escape key
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-      const sendModal = document.getElementById('send-modal');
-      const replyModal = document.getElementById('reply-modal');
       if (sendModal.classList.contains('active')) {
-        closeSendModal();
+        setModalActive(sendModal, false);
       } else if (replyModal.classList.contains('active')) {
-        closeReplyModal();
+        setModalActive(replyModal, false);
       } else {
         closeModal();
       }
@@ -248,18 +237,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Handle direct links
+  // Handle direct links (hash-based for backward compat)
   const hash = window.location.hash.substring(1);
   if (hash) {
     openModalBySlug(hash);
   }
 
   // Listen/Read buttons (no-op for now)
-  document.querySelector('.modal-listen-btn').addEventListener('click', function(e) {
+  postcardModal.querySelector('.modal-listen-btn').addEventListener('click', function(e) {
     e.stopPropagation();
   });
 
-  document.querySelector('.modal-read-btn').addEventListener('click', function(e) {
+  postcardModal.querySelector('.modal-read-btn').addEventListener('click', function(e) {
     e.stopPropagation();
   });
 });

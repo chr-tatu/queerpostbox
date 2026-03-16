@@ -1,0 +1,32 @@
+<!-- Send Postcard Modal -->
+<div id="send-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a postcard">
+  <div class="reply-card">
+    <button class="send-modal-close" aria-label="Close">
+      <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="20" height="20">
+    </button>
+    <div class="reply-content">
+      <h2 class="reply-title">Send a postcard</h2>
+      <p class="reply-instruction">Write your story, thoughts, or message on a postcard and post it to:</p>
+      <div class="reply-postcard-example">
+        <div class="reply-example-body">
+          <div class="reply-example-left">
+            <p class="reply-example-meta">City, Date</p>
+            <p class="reply-example-heading">Your message</p>
+            <p class="reply-example-text">Write your story, thoughts, or message here...</p>
+            <p class="reply-example-sign">/Your name (optional)</p>
+          </div>
+          <div class="reply-example-divider"></div>
+          <div class="reply-example-right">
+            <div class="reply-example-stamp"></div>
+            <div class="reply-example-address">
+              <p>{{ site.mailing_address.name }}</p>
+              <p>{{ site.mailing_address.street }}</p>
+              <p>{{ site.mailing_address.postal }}</p>
+              <p>{{ site.mailing_address.country }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

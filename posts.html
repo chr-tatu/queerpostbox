@@ -29,7 +29,6 @@ title: All Postcards
     {% assign post_index = 0 %}
     {% for post in site.posts %}
       {% assign post_index = post_index | plus: 1 %}
-      {% assign days_ago = "now" | date: "%s" | minus: post.date | date: "%s" %}
       {% assign is_new = false %}
       {% if post_index <= 3 %}
         {% assign is_new = true %}
@@ -37,13 +36,13 @@ title: All Postcards
       <div class="postcard-item"
            data-index="{{ post_index }}"
            data-slug="{{ post.slug }}"
+           data-permalink="{{ post.url | relative_url }}"
            data-title="{{ post.title | escape }}"
            data-date="{{ post.date | date: '%B %d, %Y' }}"
            data-country="{{ post.country }}"
            data-topic="{{ post.topic }}"
            data-content="{{ post.content | escape }}"
-           data-number="{{ post_index }}"
-           onclick="openModal(this)">
+           data-number="{{ post_index }}">
         {% if is_new %}
           <div class="new-badge">
             <span>New!</span>
@@ -71,105 +70,6 @@ title: All Postcards
   <span class="send-label">Send postcard</span>
 </button>
 
-<!-- Postcard Modal -->
-<div id="postcard-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Postcard viewer">
-  <div class="modal-backdrop"></div>
-  <div class="modal-postcard-details">
-    <span class="modal-postcard-number"></span>
-    <div class="modal-postcard-wrapper">
-      <div class="modal-card-container">
-        <div class="modal-card-front">
-          <img class="modal-front-img" src="" alt="">
-        </div>
-        <div class="modal-card-back">
-          <img class="modal-back-img" src="" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="modal-bottom-section">
-      <div class="modal-accessibility-btns">
-        <button class="modal-action-btn modal-listen-btn" style="display:none">
-          <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="modal-action-icon">
-        </button>
-        <button class="modal-action-btn modal-read-btn" style="display:none">
-          <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="modal-action-icon">
-        </button>
-      </div>
-      <button class="modal-action-btn modal-flip-btn">
-        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="modal-action-icon">
-      </button>
-    </div>
-    <button class="modal-arrow-down" aria-label="Send a reply">
-      <svg width="32" height="16" viewBox="0 0 32 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4 4L16 12L28 4" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- Reply Info Modal -->
-<div id="reply-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a reply">
-  <div class="reply-card">
-    <button class="reply-close" aria-label="Close">
-      <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="20" height="20">
-    </button>
-    <div class="reply-content">
-      <h2 class="reply-title">To send a reply:</h2>
-      <p class="reply-instruction">Write the same number displayed above the postcard on the top left side of your reply postcard.</p>
-      <div class="reply-postcard-example">
-        <div class="reply-example-number">#123</div>
-        <div class="reply-example-body">
-          <div class="reply-example-left">
-            <p class="reply-example-meta">City, Date</p>
-            <p class="reply-example-heading">Your message</p>
-            <p class="reply-example-text">Write your story, thoughts, or reply here...</p>
-            <p class="reply-example-sign">/Your name (optional)</p>
-          </div>
-          <div class="reply-example-divider"></div>
-          <div class="reply-example-right">
-            <div class="reply-example-stamp"></div>
-            <div class="reply-example-address">
-              <p>{{ site.mailing_address.name }}</p>
-              <p>{{ site.mailing_address.street }}</p>
-              <p>{{ site.mailing_address.postal }}</p>
-              <p>{{ site.mailing_address.country }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Send Postcard Modal -->
-<div id="send-modal" class="reply-overlay" role="dialog" aria-modal="true" aria-label="Send a postcard">
-  <div class="reply-card">
-    <button class="send-modal-close" aria-label="Close">
-      <img src="{{ '/assets/icons/close.svg' | relative_url }}" alt="Close" width="20" height="20">
-    </button>
-    <div class="reply-content">
-      <h2 class="reply-title">Send a postcard</h2>
-      <p class="reply-instruction">Write your story, thoughts, or message on a postcard and post it to:</p>
-      <div class="reply-postcard-example">
-        <div class="reply-example-body">
-          <div class="reply-example-left">
-            <p class="reply-example-meta">City, Date</p>
-            <p class="reply-example-heading">Your message</p>
-            <p class="reply-example-text">Write your story, thoughts, or message here...</p>
-            <p class="reply-example-sign">/Your name (optional)</p>
-          </div>
-          <div class="reply-example-divider"></div>
-          <div class="reply-example-right">
-            <div class="reply-example-stamp"></div>
-            <div class="reply-example-address">
-              <p>{{ site.mailing_address.name }}</p>
-              <p>{{ site.mailing_address.street }}</p>
-              <p>{{ site.mailing_address.postal }}</p>
-              <p>{{ site.mailing_address.country }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{% include modals/postcard.html %}
+{% include modals/reply.html %}
+{% include modals/send.html %}

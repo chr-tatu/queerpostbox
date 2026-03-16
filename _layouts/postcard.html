@@ -2,18 +2,77 @@
 layout: default
 ---
 
-<article class="postcard-detail">
-  <header class="postcard-header">
-    <h1>{{ page.title }}</h1>
-    <div class="postcard-meta">
-      <p><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
-      <p><strong>Country:</strong> {{ page.country }}</p>
-      <p><strong>Topic:</strong> {{ page.topic }}</p>
+<link rel="stylesheet" href="{{ '/assets/css/postcard.css' | relative_url }}">
+
+{% assign post_number = 0 %}
+{% for post in site.posts %}
+  {% assign post_number = post_number | plus: 1 %}
+  {% if post.url == page.url %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+
+<div class="postcard-page">
+  <a href="{{ '/posts.html' | relative_url }}" class="postcard-back-link">
+    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 1L1 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All postcards
+  </a>
+
+  <div class="postcard-viewer">
+    <span class="postcard-viewer-number">#{{ post_number }}</span>
+
+    <div class="postcard-viewer-wrapper">
+      <div class="postcard-viewer-container" id="card-container">
+        <div class="postcard-viewer-front">
+          {% if page.image-front %}
+            <img src="{{ page.image-front | relative_url }}" alt="{{ page.title }} - Front" class="postcard-viewer-img">
+          {% endif %}
+        </div>
+        <div class="postcard-viewer-back">
+          {% if page.image-back %}
+            <img src="{{ page.image-back | relative_url }}" alt="{{ page.title }} - Back" class="postcard-viewer-img">
+          {% endif %}
+        </div>
+      </div>
     </div>
-  </header>
-  <div class="postcard-images">
-    <img src="{{ page.image-front }}" alt="Postcard Front">
-    {{ content }}
-    <img src="{{ page.image-back }}" alt="Postcard Back">
+
+    <div class="postcard-viewer-actions">
+      <div class="postcard-viewer-accessibility">
+        <button class="postcard-viewer-btn postcard-listen-btn" style="display:none">
+          <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="postcard-viewer-icon">
+        </button>
+        <button class="postcard-viewer-btn postcard-read-btn" style="display:none">
+          <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="postcard-viewer-icon">
+        </button>
+      </div>
+      <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
+        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
+      </button>
+    </div>
   </div>
-</article>
+
+  <div class="postcard-meta">
+    <p class="postcard-meta-item"><strong>Country:</strong> {{ page.country }}</p>
+    <p class="postcard-meta-item"><strong>Topic:</strong> {{ page.topic }}</p>
+    <p class="postcard-meta-item"><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('card-container');
+    const flipBtn = document.getElementById('flip-btn');
+    const listenBtn = document.querySelector('.postcard-listen-btn');
+    const readBtn = document.querySelector('.postcard-read-btn');
+    let isFlipped = false;
+
+    flipBtn.addEventListener('click', function() {
+      isFlipped = !isFlipped;
+      container.classList.toggle('flipped', isFlipped);
+      listenBtn.style.display = isFlipped ? 'flex' : 'none';
+      readBtn.style.display = isFlipped ? 'flex' : 'none';
+    });
+  });
+</script>
