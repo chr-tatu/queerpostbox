@@ -286,7 +286,11 @@ document.addEventListener('DOMContentLoaded', function() {
     var anyMoving = false;
 
     postcardItems.forEach(function(item, i) {
-      if (item.classList.contains('filtered-out')) return;
+      if (item.classList.contains('filtered-out')) {
+        cardOffsets[i] = 0;
+        item.style.transform = '';
+        return;
+      }
 
       // Push offset by scroll delta, scaled by card's viewport position
       // Cards further from viewport center get more lag
@@ -378,7 +382,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
   grid.addEventListener('mouseover', function(e) {
     var item = e.target.closest('.postcard-item');
-    if (!item || item === currentHoveredItem) return;
+    if (!item) {
+      // Cursor is over grid gaps — clear displacement
+      if (currentHoveredItem) {
+        clearNeighborShifts();
+        currentHoveredItem = null;
+      }
+      return;
+    }
+    if (item === currentHoveredItem) return;
     clearNeighborShifts();
     currentHoveredItem = item;
     shiftNeighbors(item);
