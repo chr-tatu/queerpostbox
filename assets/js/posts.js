@@ -94,6 +94,8 @@ function openModal(postcardElement, skipAnimation) {
   frontImg.alt = title + ' - Front';
   if (imgEl.naturalWidth && imgEl.naturalHeight) {
     frontImg.style.aspectRatio = imgEl.naturalWidth + '/' + imgEl.naturalHeight;
+  } else {
+    frontImg.style.aspectRatio = '';
   }
   backImg.src = backSrc || '';
   backImg.alt = backSrc ? title + ' - Back' : '';
@@ -108,7 +110,8 @@ function openModal(postcardElement, skipAnimation) {
 
   var details = postcardModal.querySelector('.modal-postcard-details');
 
-  if (skipAnimation || !imgEl) {
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (skipAnimation || !imgEl || reducedMotion) {
     // No animation — just show
     postcardModal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -117,6 +120,8 @@ function openModal(postcardElement, skipAnimation) {
   }
 
   // --- Fly Animation using a floating clone ---
+  var flyAborted = false;
+  postcardModal._abortFlyIn = function() { flyAborted = true; };
   var scrollY = window.scrollY;
 
   // Lock scroll first so all measurements are in the same viewport state (no scrollbar shift)
@@ -191,6 +196,8 @@ function openModal(postcardElement, skipAnimation) {
 
   function onFlyEnd() {
     clone.removeEventListener('transitionend', onFlyEnd);
+    if (flyAborted) { clone.remove(); return; }
+    postcardModal._abortFlyIn = null;
     // Crossfade: show modal while fading clone out
     details.style.visibility = '';
     details.style.opacity = '';
@@ -216,6 +223,9 @@ function openModal(postcardElement, skipAnimation) {
 }
 
 function closeModal(fromPopstate) {
+  // Abort any in-progress fly-in animation
+  if (postcardModal._abortFlyIn) postcardModal._abortFlyIn();
+
   var details = postcardModal.querySelector('.modal-postcard-details');
   var sourceEl = currentPostcard;
 
