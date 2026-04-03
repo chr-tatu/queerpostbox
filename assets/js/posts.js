@@ -97,6 +97,23 @@ function openModal(postcardElement, skipAnimation) {
   } else {
     frontImg.style.aspectRatio = '';
   }
+
+  // Align UI rows to the visible image width (handles object-fit: contain)
+  function updateImgWidth() {
+    var nat = frontImg.naturalWidth / frontImg.naturalHeight;
+    var box = frontImg.getBoundingClientRect();
+    var boxRatio = box.width / box.height;
+    var visibleW = boxRatio > nat ? box.height * nat : box.width;
+    postcardModal.querySelector('.modal-postcard-details')
+      .style.setProperty('--img-width', visibleW + 'px');
+  }
+  if (frontImg.complete && frontImg.naturalWidth) {
+    requestAnimationFrame(updateImgWidth);
+  }
+  frontImg.addEventListener('load', function onLoad() {
+    updateImgWidth();
+    frontImg.removeEventListener('load', onLoad);
+  });
   backImg.src = backSrc || '';
   backImg.alt = backSrc ? title + ' - Back' : '';
   numberEl.textContent = '#' + number;
@@ -119,6 +136,7 @@ function openModal(postcardElement, skipAnimation) {
     backdrop.style.webkitBackdropFilter = 'blur(8px)';
     backdrop.style.background = 'transparent';
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
     postcardModal.querySelector('.modal-flip-btn').focus();
     return;
   }
@@ -131,6 +149,7 @@ function openModal(postcardElement, skipAnimation) {
   // Lock scroll first so all measurements are in the same viewport state (no scrollbar shift)
   postcardElement.style.scale = '1';
   document.body.style.overflow = 'hidden';
+  document.body.classList.add('modal-open');
   window.scrollTo(0, scrollY);
 
   // Measure source position (now in no-scrollbar state)
@@ -351,6 +370,7 @@ function closeModal(fromPopstate) {
     backdrop.style.backdropFilter = '';
     backdrop.style.webkitBackdropFilter = '';
     document.body.style.overflow = '';
+    document.body.classList.remove('modal-open');
     if (sourceEl) {
       sourceEl.classList.remove('fly-source');
       sourceEl.style.scale = '';
