@@ -100,6 +100,7 @@ function openModal(postcardElement, skipAnimation) {
 
   // Align UI rows to the visible image width (handles object-fit: contain)
   function updateImgWidth() {
+    if (!frontImg.naturalWidth) return;
     var nat = frontImg.naturalWidth / frontImg.naturalHeight;
     var box = frontImg.getBoundingClientRect();
     var boxRatio = box.width / box.height;
@@ -114,6 +115,12 @@ function openModal(postcardElement, skipAnimation) {
     updateImgWidth();
     frontImg.removeEventListener('load', onLoad);
   });
+  // Recalculate on resize/rotation while modal is open
+  if (postcardModal._resizeHandler) {
+    window.removeEventListener('resize', postcardModal._resizeHandler);
+  }
+  postcardModal._resizeHandler = updateImgWidth;
+  window.addEventListener('resize', updateImgWidth);
   backImg.src = backSrc || '';
   backImg.alt = backSrc ? title + ' - Back' : '';
   numberEl.textContent = '#' + number;
@@ -371,6 +378,10 @@ function closeModal(fromPopstate) {
     backdrop.style.webkitBackdropFilter = '';
     document.body.style.overflow = '';
     document.body.classList.remove('modal-open');
+    if (postcardModal._resizeHandler) {
+      window.removeEventListener('resize', postcardModal._resizeHandler);
+      postcardModal._resizeHandler = null;
+    }
     if (sourceEl) {
       sourceEl.classList.remove('fly-source');
       sourceEl.style.scale = '';
