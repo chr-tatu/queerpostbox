@@ -327,6 +327,12 @@
   position: absolute;
   inset: 0;
   background: var(--color-overlay);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.modal-overlay.active .modal-backdrop {
+  opacity: 1;
 }
 
 .modal-postcard-details {
@@ -341,6 +347,24 @@
   max-width: 800px;
   width: 85vw;
   max-height: 90vh;
+}
+
+/* Modal UI fade-in after fly animation */
+.modal-postcard-details .modal-top-row,
+.modal-postcard-details .modal-bottom-section,
+.modal-postcard-details .modal-arrow-down {
+  transition: opacity 0.2s ease;
+}
+
+.modal-postcard-details.fly-hidden .modal-top-row,
+.modal-postcard-details.fly-hidden .modal-bottom-section,
+.modal-postcard-details.fly-hidden .modal-arrow-down {
+  opacity: 0;
+}
+
+/* Hide source postcard during animation */
+.postcard-item.fly-source {
+  opacity: 0 !important;
 }
 
 .modal-top-row {
