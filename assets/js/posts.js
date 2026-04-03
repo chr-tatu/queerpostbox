@@ -117,7 +117,7 @@ function openModal(postcardElement, skipAnimation) {
     var backdrop = postcardModal.querySelector('.modal-backdrop');
     backdrop.style.backdropFilter = 'blur(8px)';
     backdrop.style.webkitBackdropFilter = 'blur(8px)';
-    backdrop.style.background = 'rgba(255, 255, 255, 0.3)';
+    backdrop.style.background = 'transparent';
     document.body.style.overflow = 'hidden';
     postcardModal.querySelector('.modal-flip-btn').focus();
     return;
@@ -202,7 +202,6 @@ function openModal(postcardElement, skipAnimation) {
   var backdrop = postcardModal.querySelector('.modal-backdrop');
   var blurDuration = 320; // match fly transition
   var blurMax = 8;
-  var bgAlphaMax = 0.3;
   var blurStart = performance.now();
   function tickBlurIn(now) {
     if (flyAborted) return;
@@ -210,10 +209,8 @@ function openModal(postcardElement, skipAnimation) {
     // ease-out curve
     var ease = 1 - (1 - t) * (1 - t);
     var blur = (blurMax * ease).toFixed(1);
-    var alpha = (bgAlphaMax * ease).toFixed(3);
     backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
     backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-    backdrop.style.background = 'rgba(255, 255, 255, ' + alpha + ')';
     if (t < 1) requestAnimationFrame(tickBlurIn);
   }
   requestAnimationFrame(tickBlurIn);
@@ -301,10 +298,8 @@ function closeModal(fromPopstate) {
       var t = Math.min((now - blurOutStart) / blurOutDuration, 1);
       var ease = t * t; // ease-in
       var blur = (8 * (1 - ease)).toFixed(1);
-      var alpha = (0.3 * (1 - ease)).toFixed(3);
       backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
       backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-      backdrop.style.background = 'rgba(255, 255, 255, ' + alpha + ')';
       if (t < 1) requestAnimationFrame(tickBlurOut);
     }
     requestAnimationFrame(tickBlurOut);
