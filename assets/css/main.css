@@ -58,15 +58,9 @@ body {
   padding: 32px 25px 0;
 }
 
-/* When modal is open: header stays on top but becomes transparent,
-   so the blur shows through while the logo remains crisp */
+/* Drop header behind modal overlay when modal is open */
 .modal-open .site-header {
-  background: transparent;
-  pointer-events: none;
-}
-
-.modal-open .logo {
-  pointer-events: auto;
+  z-index: 1;
 }
 
 .logo {
