@@ -75,7 +75,7 @@ function setModalActive(modal, active) {
 // ==================
 // Postcard Modal
 // ==================
-function openModal(postcardElement) {
+function openModal(postcardElement, skipAnimation) {
   currentPostcard = postcardElement;
   isFlipped = false;
 
@@ -89,9 +89,12 @@ function openModal(postcardElement) {
 
   if (!frontSrc) return;
 
-  // Set content
+  // Set content — preserve aspect ratio before image loads to prevent layout shift
   frontImg.src = frontSrc;
   frontImg.alt = title + ' - Front';
+  if (imgEl.naturalWidth && imgEl.naturalHeight) {
+    frontImg.style.aspectRatio = imgEl.naturalWidth + '/' + imgEl.naturalHeight;
+  }
   backImg.src = backSrc || '';
   backImg.alt = backSrc ? title + ' - Back' : '';
   numberEl.textContent = '#' + number;
@@ -103,20 +106,213 @@ function openModal(postcardElement) {
   // Update URL to real postcard permalink
   history.pushState({ postcardSlug: postcardElement.dataset.slug }, title, permalink);
 
-  // Show modal
-  postcardModal.classList.add('active');
+  var details = postcardModal.querySelector('.modal-postcard-details');
+
+  if (skipAnimation || !imgEl) {
+    // No animation — just show
+    postcardModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    postcardModal.querySelector('.modal-flip-btn').focus();
+    return;
+  }
+
+  // --- Fly Animation using a floating clone ---
+  var scrollY = window.scrollY;
+
+  // Lock scroll first so all measurements are in the same viewport state (no scrollbar shift)
+  postcardElement.style.scale = '1';
   document.body.style.overflow = 'hidden';
-  postcardModal.querySelector('.modal-flip-btn').focus();
+  window.scrollTo(0, scrollY);
+
+  // Measure source position (now in no-scrollbar state)
+  var sourceRect = imgEl.getBoundingClientRect();
+
+  // Hide source postcard
+  postcardElement.classList.add('fly-source');
+
+  // Show modal invisibly WITH all UI to get correct layout measurements
+  details.style.visibility = 'hidden';
+  details.style.opacity = '0';
+  postcardModal.classList.add('active');
+  details.offsetHeight; // force layout
+
+  // Measure where the front image actually sits (with buttons affecting layout)
+  var modalImg = details.querySelector('.modal-front-img');
+  var imgRect = modalImg.getBoundingClientRect();
+  var imgAspect = imgEl.naturalWidth / imgEl.naturalHeight;
+
+  // Calculate visible image area within element box (object-fit: contain)
+  var renderedW, renderedH;
+  if (imgRect.width > 0 && imgRect.height > 0) {
+    var elemAspect = imgRect.width / imgRect.height;
+    if (elemAspect > imgAspect) {
+      renderedH = imgRect.height;
+      renderedW = imgRect.height * imgAspect;
+    } else {
+      renderedW = imgRect.width;
+      renderedH = imgRect.width / imgAspect;
+    }
+  } else {
+    // Fallback if image hasn't laid out yet
+    var modalW = Math.min(window.innerWidth * 0.85, 800);
+    if (modalW / (window.innerHeight * 0.65) > imgAspect) {
+      renderedH = window.innerHeight * 0.65;
+      renderedW = renderedH * imgAspect;
+    } else {
+      renderedW = modalW;
+      renderedH = modalW / imgAspect;
+    }
+  }
+  var destCenterX = imgRect.width > 0 ? imgRect.left + imgRect.width / 2 : window.innerWidth / 2;
+  var destCenterY = imgRect.height > 0 ? imgRect.top + imgRect.height / 2 : window.innerHeight / 2;
+
+  // Now hide UI during fly animation (opacity only — no layout change)
+  details.classList.add('fly-hidden');
+
+  // Create a floating clone of the grid image
+  var clone = imgEl.cloneNode();
+  clone.className = 'fly-clone';
+  clone.style.cssText = 'position:fixed;z-index:2001;border-radius:4px;pointer-events:none;' +
+    'object-fit:contain;background:transparent;' +
+    'left:' + sourceRect.left + 'px;top:' + sourceRect.top + 'px;' +
+    'width:' + sourceRect.width + 'px;height:' + sourceRect.height + 'px;' +
+    'transition:left 0.32s cubic-bezier(0.4,0,0.15,1),top 0.32s cubic-bezier(0.4,0,0.15,1),' +
+    'width 0.32s cubic-bezier(0.4,0,0.15,1),height 0.32s cubic-bezier(0.4,0,0.15,1);';
+  document.body.appendChild(clone);
+
+  // Force reflow
+  clone.offsetHeight;
+
+  // Animate clone to modal center
+  clone.style.left = (destCenterX - renderedW / 2) + 'px';
+  clone.style.top = (destCenterY - renderedH / 2) + 'px';
+  clone.style.width = renderedW + 'px';
+  clone.style.height = renderedH + 'px';
+
+  function onFlyEnd() {
+    clone.removeEventListener('transitionend', onFlyEnd);
+    // Crossfade: show modal while fading clone out
+    details.style.visibility = '';
+    details.style.opacity = '';
+    details.classList.remove('fly-hidden');
+    clone.style.transition = 'opacity 0.15s ease';
+    clone.style.opacity = '0';
+    setTimeout(function() {
+      clone.remove();
+    }, 160);
+    postcardModal.querySelector('.modal-flip-btn').focus();
+  }
+  clone.addEventListener('transitionend', onFlyEnd);
+
+  // Safety timeout
+  setTimeout(function() {
+    if (clone.parentNode) {
+      details.style.visibility = '';
+      details.style.opacity = '';
+      details.classList.remove('fly-hidden');
+      clone.remove();
+    }
+  }, 500);
 }
 
 function closeModal(fromPopstate) {
-  postcardModal.classList.remove('active');
-  document.body.style.overflow = '';
+  var details = postcardModal.querySelector('.modal-postcard-details');
+  var sourceEl = currentPostcard;
+
   if (!fromPopstate) {
     history.pushState(null, '', '/posts.html');
   }
-  currentPostcard = null;
-  isFlipped = false;
+
+  // Try reverse fly animation
+  if (sourceEl && sourceEl.classList.contains('fly-source')) {
+    var sourceImg = sourceEl.querySelector('.postcard-image');
+
+    // Measure where the front image actually renders in the modal
+    var modalImg = details.querySelector('.modal-front-img');
+    var frontImgRect = modalImg.getBoundingClientRect();
+
+    var imgAspect = sourceImg.naturalWidth / sourceImg.naturalHeight;
+    var elemAspect = frontImgRect.width / frontImgRect.height;
+    var renderedW, renderedH;
+    if (elemAspect > imgAspect) {
+      renderedH = frontImgRect.height;
+      renderedW = frontImgRect.height * imgAspect;
+    } else {
+      renderedW = frontImgRect.width;
+      renderedH = frontImgRect.width / imgAspect;
+    }
+    var destCenterX = frontImgRect.left + frontImgRect.width / 2;
+    var destCenterY = frontImgRect.top + frontImgRect.height / 2;
+
+    // Measure source position in same viewport state (scroll already locked)
+    var scrollY = window.scrollY;
+    var sourceRect = sourceImg.getBoundingClientRect();
+
+    // Hide modal UI (buttons disappear first), then create clone
+    details.classList.add('fly-hidden');
+    details.style.opacity = '0';
+    var clone = sourceImg.cloneNode();
+    clone.className = 'fly-clone';
+    clone.style.cssText = 'position:fixed;z-index:2001;border-radius:4px;pointer-events:none;' +
+      'left:' + (destCenterX - renderedW / 2) + 'px;top:' + (destCenterY - renderedH / 2) + 'px;' +
+      'width:' + renderedW + 'px;height:' + renderedH + 'px;' +
+      'transition:all 0.28s cubic-bezier(0.4, 0, 0.15, 1);';
+    document.body.appendChild(clone);
+
+    // Fade out backdrop
+    postcardModal.querySelector('.modal-backdrop').style.opacity = '0';
+
+    // Force reflow
+    clone.offsetHeight;
+
+    // Animate clone back to grid position
+    clone.style.left = sourceRect.left + 'px';
+    clone.style.top = sourceRect.top + 'px';
+    clone.style.width = sourceRect.width + 'px';
+    clone.style.height = sourceRect.height + 'px';
+
+    function onCloseEnd() {
+      clone.removeEventListener('transitionend', onCloseEnd);
+      // Crossfade: show grid card while fading clone out
+      if (sourceEl) sourceEl.classList.remove('fly-source');
+      clone.style.transition = 'opacity 0.12s ease';
+      clone.style.opacity = '0';
+      setTimeout(function() {
+        clone.remove();
+        finishClose();
+      }, 130);
+    }
+    clone.addEventListener('transitionend', onCloseEnd);
+
+    // Safety timeout
+    setTimeout(function() {
+      if (clone.parentNode) {
+        if (sourceEl) sourceEl.classList.remove('fly-source');
+        clone.remove();
+        finishClose();
+      }
+    }, 450);
+  } else {
+    finishClose();
+  }
+
+  var closed = false;
+  function finishClose() {
+    if (closed) return;
+    closed = true;
+    postcardModal.classList.remove('active');
+    details.classList.remove('fly-hidden');
+    details.style.opacity = '';
+    details.style.visibility = '';
+    postcardModal.querySelector('.modal-backdrop').style.opacity = '';
+    document.body.style.overflow = '';
+    if (sourceEl) {
+      sourceEl.classList.remove('fly-source');
+      sourceEl.style.scale = '';
+    }
+    currentPostcard = null;
+    isFlipped = false;
+  }
 }
 
 function flipCard() {
@@ -141,7 +337,7 @@ function updateModalButtons() {
 function openModalBySlug(slug) {
   const postcardElement = document.querySelector('[data-slug="' + slug + '"]');
   if (postcardElement) {
-    openModal(postcardElement);
+    openModal(postcardElement, true);
   }
 }
 
