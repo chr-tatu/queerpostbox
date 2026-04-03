@@ -58,6 +58,11 @@ body {
   padding: 32px 25px 0;
 }
 
+/* Drop header behind modal overlay when modal is open */
+.modal-open .site-header {
+  z-index: 1;
+}
+
 .logo {
   position: relative;
   display: inline-block;
