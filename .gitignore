@@ -6,3 +6,4 @@ vendor
 .DS_Store
 .vscode
 .claude/launch.json
+.claude/settings.json

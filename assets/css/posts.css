@@ -326,13 +326,9 @@
 .modal-backdrop {
   position: absolute;
   inset: 0;
-  background: var(--color-overlay);
-  opacity: 0;
-  transition: opacity 0.35s ease;
-}
-
-.modal-overlay.active .modal-backdrop {
-  opacity: 1;
+  background: transparent;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
 }
 
 .modal-postcard-details {

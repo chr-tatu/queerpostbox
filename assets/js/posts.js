@@ -114,6 +114,10 @@ function openModal(postcardElement, skipAnimation) {
   if (skipAnimation || !imgEl || reducedMotion) {
     // No animation — just show
     postcardModal.classList.add('active');
+    var backdrop = postcardModal.querySelector('.modal-backdrop');
+    backdrop.style.backdropFilter = 'blur(8px)';
+    backdrop.style.webkitBackdropFilter = 'blur(8px)';
+    backdrop.style.background = 'transparent';
     document.body.style.overflow = 'hidden';
     postcardModal.querySelector('.modal-flip-btn').focus();
     return;
@@ -194,6 +198,23 @@ function openModal(postcardElement, skipAnimation) {
   clone.style.width = renderedW + 'px';
   clone.style.height = renderedH + 'px';
 
+  // Animate backdrop blur in sync with fly animation
+  var backdrop = postcardModal.querySelector('.modal-backdrop');
+  var blurDuration = 320; // match fly transition
+  var blurMax = 8;
+  var blurStart = performance.now();
+  function tickBlurIn(now) {
+    if (flyAborted) return;
+    var t = Math.min((now - blurStart) / blurDuration, 1);
+    // ease-out curve
+    var ease = 1 - (1 - t) * (1 - t);
+    var blur = (blurMax * ease).toFixed(1);
+    backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
+    backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
+    if (t < 1) requestAnimationFrame(tickBlurIn);
+  }
+  requestAnimationFrame(tickBlurIn);
+
   function onFlyEnd() {
     clone.removeEventListener('transitionend', onFlyEnd);
     if (flyAborted) { clone.remove(); return; }
@@ -269,8 +290,19 @@ function closeModal(fromPopstate) {
       'transition:all 0.28s cubic-bezier(0.4, 0, 0.15, 1);';
     document.body.appendChild(clone);
 
-    // Fade out backdrop
-    postcardModal.querySelector('.modal-backdrop').style.opacity = '0';
+    // Animate backdrop blur out in sync with fly-out
+    var backdrop = postcardModal.querySelector('.modal-backdrop');
+    var blurOutDuration = 280; // match close fly transition
+    var blurOutStart = performance.now();
+    function tickBlurOut(now) {
+      var t = Math.min((now - blurOutStart) / blurOutDuration, 1);
+      var ease = t * t; // ease-in
+      var blur = (8 * (1 - ease)).toFixed(1);
+      backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
+      backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
+      if (t < 1) requestAnimationFrame(tickBlurOut);
+    }
+    requestAnimationFrame(tickBlurOut);
 
     // Force reflow
     clone.offsetHeight;
@@ -314,7 +346,10 @@ function closeModal(fromPopstate) {
     details.classList.remove('fly-hidden');
     details.style.opacity = '';
     details.style.visibility = '';
-    postcardModal.querySelector('.modal-backdrop').style.opacity = '';
+    var backdrop = postcardModal.querySelector('.modal-backdrop');
+    backdrop.style.background = '';
+    backdrop.style.backdropFilter = '';
+    backdrop.style.webkitBackdropFilter = '';
     document.body.style.overflow = '';
     if (sourceEl) {
       sourceEl.classList.remove('fly-source');
