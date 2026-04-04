@@ -255,7 +255,19 @@
   }
 
   .postcard-meta {
-    display: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 16px;
+    border-top: none;
+    margin-top: 0;
+    padding: 0;
+  }
+
+  .postcard-meta-item {
+    flex-direction: row;
+    gap: 6px;
+    align-items: baseline;
   }
 
   .postcard-viewer-number {

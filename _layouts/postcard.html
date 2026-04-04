@@ -103,7 +103,10 @@ layout: default
       if (frontImg.complete) updateViewerSize();
       else frontImg.addEventListener('load', updateViewerSize);
     }
-    window.addEventListener('resize', updateViewerSize);
+    window.addEventListener('resize', function() {
+      updateViewerSize();
+      if (readOverlay && readOverlay.classList.contains('active')) updateReadOverlaySize();
+    });
 
     flipBtn.addEventListener('click', function() {
       isFlipped = !isFlipped;
@@ -119,12 +122,19 @@ layout: default
       });
     }
 
+    var backImg = document.querySelector('.postcard-viewer-back .postcard-viewer-img');
+
     function updateReadOverlaySize() {
-      if (!readOverlay) return;
-      var img = document.querySelector('.postcard-viewer-back .postcard-viewer-img');
-      if (!img || !img.naturalWidth || !img.naturalHeight) return;
-      var rect = img.getBoundingClientRect();
-      var natRatio = img.naturalWidth / img.naturalHeight;
+      if (!readOverlay || !backImg) return;
+      if (!backImg.naturalWidth || !backImg.naturalHeight) {
+        backImg.addEventListener('load', function onLoad() {
+          backImg.removeEventListener('load', onLoad);
+          if (readOverlay.classList.contains('active')) updateReadOverlaySize();
+        });
+        return;
+      }
+      var rect = backImg.getBoundingClientRect();
+      var natRatio = backImg.naturalWidth / backImg.naturalHeight;
       var elemRatio = rect.width / rect.height;
       var visW, visH;
       if (elemRatio > natRatio) {
