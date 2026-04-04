@@ -36,6 +36,12 @@ mailing_address:
   postal: "123 32 City"
   country: "Country"
 
+# Social links (shown in footer)
+social:
+  instagram: "https://www.instagram.com/queerpostbox"
+  tiktok: "https://www.tiktok.com/@queerpostbox"
+  email: "hello@queerpostbox.com"
+
 # Build settings
 # theme: jekyll-theme-minimal
 # theme: minima
