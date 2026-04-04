@@ -507,6 +507,41 @@
   50% { opacity: 0.6; }
 }
 
+/* Read transcript overlay */
+.modal-read-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: 2px;
+}
+
+.modal-read-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-read-text {
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--color-gray-5);
+  text-align: center;
+  max-width: 480px;
+  margin: 0;
+}
+
+/* Read button active state */
+.modal-read-btn.reading .modal-action-icon {
+  filter: drop-shadow(0 0 6px rgba(195, 177, 225, 0.7));
+}
+
 /* Down arrow to reply */
 .modal-arrow-down {
   background: rgba(40, 36, 58, 0.5);

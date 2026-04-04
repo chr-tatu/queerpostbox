@@ -300,6 +300,9 @@ function openModal(postcardElement, skipAnimation) {
 }
 
 function closeModal(fromPopstate) {
+  // Close read overlay
+  closeReadOverlay();
+
   // Stop audio playback
   stopAudio();
 
@@ -425,6 +428,7 @@ function closeModal(fromPopstate) {
 }
 
 function flipCard() {
+  closeReadOverlay();
   isFlipped = !isFlipped;
   cardContainer.classList.toggle('flipped', isFlipped);
   updateModalButtons();
@@ -438,12 +442,9 @@ function updateModalButtons() {
   const hasAudio = currentPostcard && currentPostcard.dataset.audio;
   listenBtn.style.display = hasAudio ? 'flex' : 'none';
 
-  // Read button: visible only when flipped
-  if (isFlipped) {
-    readBtn.style.display = 'flex';
-  } else {
-    readBtn.style.display = 'none';
-  }
+  // Read button: visible only when flipped and postcard has content
+  const hasContent = currentPostcard && currentPostcard.dataset.content;
+  readBtn.style.display = (isFlipped && hasContent) ? 'flex' : 'none';
 }
 
 function handleAudioEnd() {
@@ -507,6 +508,32 @@ function toggleAudio() {
   } else {
     startAudio(currentPostcard.dataset.audio);
   }
+}
+
+function toggleReadOverlay() {
+  var overlay = postcardModal.querySelector('.modal-read-overlay');
+  var readBtn = postcardModal.querySelector('.modal-read-btn');
+  var isActive = overlay.classList.contains('active');
+
+  if (isActive) {
+    overlay.classList.remove('active');
+    readBtn.classList.remove('reading');
+    readBtn.setAttribute('aria-label', 'Read transcript');
+  } else {
+    if (currentPostcard && currentPostcard.dataset.content) {
+      postcardModal.querySelector('.modal-read-text').innerHTML = currentPostcard.dataset.content;
+    }
+    overlay.classList.add('active');
+    readBtn.classList.add('reading');
+    readBtn.setAttribute('aria-label', 'Hide transcript');
+  }
+}
+
+function closeReadOverlay() {
+  var overlay = postcardModal.querySelector('.modal-read-overlay');
+  var readBtn = postcardModal.querySelector('.modal-read-btn');
+  overlay.classList.remove('active');
+  readBtn.classList.remove('reading');
 }
 
 function updateListenButtonState() {
@@ -636,9 +663,10 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleAudio();
   });
 
-  // Read button (no-op for now)
+  // Read button — toggle transcript overlay
   postcardModal.querySelector('.modal-read-btn').addEventListener('click', function(e) {
     e.stopPropagation();
+    toggleReadOverlay();
   });
 
   // ==================
