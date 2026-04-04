@@ -36,8 +36,9 @@
   --size-logo-lines-h: 68px;
   --offset-logo-lines-left: 130px;
 
-  /* Layout sizing */
+  /* Layout sizing — desktop */
   --width-sidebar: 160px;
+  /* sticky-top-sidebar must stay above the header height (header h ≈ 126px on tablet, 140px desktop) */
   --sticky-top-sidebar: 140px;
 
   /* Button & icon sizing — desktop */
@@ -73,7 +74,7 @@ body {
   top: 0;
   z-index: 2100;
   background: var(--color-white);
-  padding: 32px 25px 16px;
+  padding: 32px 25px 16px; /* 16px bottom gives breathing room below the logo */
 }
 
 /* Drop header behind modal overlay when modal is open */
