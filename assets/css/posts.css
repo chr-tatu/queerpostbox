@@ -806,3 +806,17 @@
     columns: 1;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .send-postcard-btn::after {
+    animation: none;
+  }
+
+  .send-postcard-btn:hover::before {
+    animation: none;
+  }
+
+  .send-postcard-btn:hover {
+    animation: none;
+  }
+}
