@@ -534,6 +534,7 @@ function closeReadOverlay() {
   var readBtn = postcardModal.querySelector('.modal-read-btn');
   overlay.classList.remove('active');
   readBtn.classList.remove('reading');
+  readBtn.setAttribute('aria-label', 'Read transcript');
 }
 
 function updateListenButtonState() {
