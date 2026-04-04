@@ -8,6 +8,7 @@ let currentHoveredItem = null;
 // Cached DOM references (set in DOMContentLoaded)
 let postcardModal, replyModal, sendModal, cardContainer;
 let frontImg, backImg, numberEl;
+let postcardItems;
 
 // ==================
 // Country Filter
@@ -42,8 +43,7 @@ function initFilters() {
     } else {
       clearBtn.classList.remove('active');
       countryBtn.classList.add('has-selection');
-      const items = document.querySelectorAll('.postcard-item');
-      items.forEach(item => {
+      postcardItems.forEach(item => {
         if (activeCountries.includes(item.dataset.country)) {
           item.classList.remove('filtered-out');
         } else {
@@ -453,6 +453,8 @@ document.addEventListener('DOMContentLoaded', function() {
   backImg = postcardModal.querySelector('.modal-back-img');
   numberEl = postcardModal.querySelector('.modal-postcard-number');
 
+  postcardItems = document.querySelectorAll('.postcard-item');
+
   initFilters();
 
   // Delegated click handler for postcard grid
@@ -553,7 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // ==================
   // Scroll Inertia Effect
   // ==================
-  const postcardItems = document.querySelectorAll('.postcard-item');
 
   // Each card tracks its own offset that lags behind scroll
   var cardOffsets = new Array(postcardItems.length);

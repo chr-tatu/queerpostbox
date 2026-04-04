@@ -18,7 +18,7 @@ title: All Postcards
         {% assign used_codes = posts_with_country | map: "country" | uniq %}
         {% for entry in site.data.countries %}
           {% if used_codes contains entry.code %}
-            <button class="filter-option" data-country="{{ entry.code }}">{{ entry.name }}</button>
+            <button class="filter-option" role="option" data-country="{{ entry.code }}">{{ entry.name }}</button>
           {% endif %}
         {% endfor %}
       </div>

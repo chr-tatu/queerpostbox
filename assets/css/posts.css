@@ -91,7 +91,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 0 0 8px 8px;
-  max-height: calc(100vh - 380px);
+  max-height: var(--filter-list-max-height, calc(100vh - 380px));
   overflow-y: auto;
 }
 
