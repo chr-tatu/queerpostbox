@@ -144,8 +144,13 @@ function openModal(postcardElement, skipAnimation) {
   if (postcardModal._resizeHandler) {
     window.removeEventListener('resize', postcardModal._resizeHandler);
   }
-  postcardModal._resizeHandler = updateImgWidth;
-  window.addEventListener('resize', updateImgWidth);
+  postcardModal._resizeHandler = function() {
+    updateImgWidth();
+    if (postcardModal.querySelector('.modal-read-overlay').classList.contains('active')) {
+      updateReadOverlaySize();
+    }
+  };
+  window.addEventListener('resize', postcardModal._resizeHandler);
   backImg.src = backSrc || '';
   backImg.alt = backSrc ? title + ' - Back' : '';
   numberEl.textContent = '#' + number;
@@ -513,7 +518,14 @@ function toggleAudio() {
 function updateReadOverlaySize() {
   var overlay = postcardModal.querySelector('.modal-read-overlay');
   var img = backImg;
-  if (!img.naturalWidth || !img.naturalHeight) return;
+  if (!img.naturalWidth || !img.naturalHeight) {
+    // Retry once when image loads
+    img.addEventListener('load', function onLoad() {
+      img.removeEventListener('load', onLoad);
+      if (overlay.classList.contains('active')) updateReadOverlaySize();
+    });
+    return;
+  }
   var imgRect = img.getBoundingClientRect();
   var natRatio = img.naturalWidth / img.naturalHeight;
   var elemRatio = imgRect.width / imgRect.height;
