@@ -53,17 +53,17 @@ layout: default
     </div>
   </div>
 
-  <div class="postcard-meta">
-    <p class="postcard-meta-item"><strong>Country:</strong> {{ country_name }}</p>
-    <p class="postcard-meta-item"><strong>Topic:</strong> {{ page.topic }}</p>
-    <p class="postcard-meta-item"><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
-  </div>
-
   {% if content != '' %}
   <div class="postcard-transcript">
     {{ content }}
   </div>
   {% endif %}
+
+  <div class="postcard-meta">
+    <p class="postcard-meta-item"><strong>Country:</strong> {{ country_name }}</p>
+    <p class="postcard-meta-item"><strong>Topic:</strong> {{ page.topic }}</p>
+    <p class="postcard-meta-item"><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
+  </div>
 </div>
 
 <script>
