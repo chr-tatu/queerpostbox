@@ -59,9 +59,11 @@ layout: default
 
       <div class="postcard-viewer-actions">
         <div class="postcard-viewer-accessibility">
+          {% if page.audio %}
           <button class="postcard-viewer-btn postcard-listen-btn" style="display:none">
             <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="postcard-viewer-icon">
           </button>
+          {% endif %}
           {% if content != '' %}
           <button class="postcard-viewer-btn postcard-read-btn" style="display:none" aria-label="Read transcript">
             <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="postcard-viewer-icon">
