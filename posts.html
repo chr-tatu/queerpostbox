@@ -24,6 +24,10 @@ title: All Postcards
       </div>
     </div>
 
+    <button class="send-postcard-btn">
+      <img class="send-icon" src="{{ '/assets/icons/postcard.svg' | relative_url }}" alt="" aria-hidden="true">
+      <span class="send-label">Send postcard</span>
+    </button>
   </aside>
 
   <div class="postcard-grid" id="postcard-grid" data-total-posts="{{ site.posts.size }}">
@@ -68,11 +72,6 @@ title: All Postcards
     {% endfor %}
   </div>
 </div>
-
-<button class="send-postcard-btn">
-  <img class="send-icon" src="{{ '/assets/icons/postcard.svg' | relative_url }}" alt="" aria-hidden="true">
-  <span class="send-label">Send postcard</span>
-</button>
 
 {% include modals/postcard.html %}
 {% include modals/reply.html %}
