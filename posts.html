@@ -43,7 +43,8 @@ title: All Postcards
            data-country="{{ post.country }}"
            data-topic="{{ post.topic }}"
            data-content="{{ post.content | escape }}"
-           data-number="{{ post_index }}">
+           data-number="{{ post_index }}"
+           {% if post.audio %}data-audio="{{ post.audio | relative_url }}"{% endif %}>
         {% if is_new %}
           <div class="new-badge">
             <span>New!</span>
