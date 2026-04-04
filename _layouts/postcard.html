@@ -81,7 +81,7 @@ layout: default
     var listenBtn = document.querySelector('.postcard-listen-btn');
     var readBtn = document.querySelector('.postcard-read-btn');
     var readOverlay = document.getElementById('read-overlay');
-    var actionsEl = document.querySelector('.postcard-viewer-actions');
+    var viewerEl = document.querySelector('.postcard-viewer');
     var isFlipped = false;
 
     function updateViewerSize() {
@@ -91,7 +91,7 @@ layout: default
       var natRatio = img.naturalWidth / img.naturalHeight;
       var elemRatio = rect.width / rect.height;
       var visW = elemRatio > natRatio ? rect.height * natRatio : rect.width;
-      if (actionsEl) actionsEl.style.setProperty('--img-width', visW + 'px');
+      if (viewerEl) viewerEl.style.setProperty('--img-width', visW + 'px');
     }
 
     var frontImg = document.querySelector('.postcard-viewer-front .postcard-viewer-img');
