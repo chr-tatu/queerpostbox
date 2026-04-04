@@ -78,8 +78,16 @@
   pointer-events: auto;
 }
 
+.postcard-viewer-front,
+.postcard-viewer-back {
+  display: flex;
+  justify-content: center;
+}
+
 .postcard-viewer-img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 65vh;
+  width: auto;
   height: auto;
   display: block;
   border-radius: 2px;
@@ -139,6 +147,19 @@
 
 .postcard-meta-item strong {
   color: var(--color-gray-5);
+}
+
+/* Transcript */
+.postcard-transcript {
+  margin-top: 24px;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-gray-5);
+}
+
+.postcard-transcript p {
+  margin: 0;
 }
 
 /* Responsive */

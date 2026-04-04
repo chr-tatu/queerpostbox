@@ -12,6 +12,9 @@ layout: default
   {% endif %}
 {% endfor %}
 
+{% assign country_data = site.data.countries | where: "code", page.country | first %}
+{% assign country_name = country_data.name | default: page.country %}
+
 <div class="postcard-page">
   <a href="{{ '/posts.html' | relative_url }}" class="postcard-back-link">
     <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,9 +46,6 @@ layout: default
         <button class="postcard-viewer-btn postcard-listen-btn" style="display:none">
           <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="postcard-viewer-icon">
         </button>
-        <button class="postcard-viewer-btn postcard-read-btn" style="display:none">
-          <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="postcard-viewer-icon">
-        </button>
       </div>
       <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
         <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
@@ -54,10 +54,16 @@ layout: default
   </div>
 
   <div class="postcard-meta">
-    <p class="postcard-meta-item"><strong>Country:</strong> {{ page.country }}</p>
+    <p class="postcard-meta-item"><strong>Country:</strong> {{ country_name }}</p>
     <p class="postcard-meta-item"><strong>Topic:</strong> {{ page.topic }}</p>
     <p class="postcard-meta-item"><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
   </div>
+
+  {% if content != '' %}
+  <div class="postcard-transcript">
+    {{ content }}
+  </div>
+  {% endif %}
 </div>
 
 <script>
@@ -65,14 +71,12 @@ layout: default
     const container = document.getElementById('card-container');
     const flipBtn = document.getElementById('flip-btn');
     const listenBtn = document.querySelector('.postcard-listen-btn');
-    const readBtn = document.querySelector('.postcard-read-btn');
     let isFlipped = false;
 
     flipBtn.addEventListener('click', function() {
       isFlipped = !isFlipped;
       container.classList.toggle('flipped', isFlipped);
       listenBtn.style.display = isFlipped ? 'flex' : 'none';
-      readBtn.style.display = isFlipped ? 'flex' : 'none';
     });
   });
 </script>
