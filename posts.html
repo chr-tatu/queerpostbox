@@ -6,6 +6,7 @@ title: All Postcards
 <div class="landing-layout">
   <aside class="sidebar">
     <div class="filters">
+      <button class="filter-clear active">All postcards</button>
       <button class="filter-name" data-filter="country" aria-expanded="false" aria-controls="country-options">
         <span class="filter-label">Country</span>
         <svg class="filter-arrow" width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,9 +15,11 @@ title: All Postcards
       </button>
       <div class="filter-options" id="country-options" role="listbox">
         {% assign posts_with_country = site.posts | where_exp: "post", "post.country" %}
-        {% assign countries = posts_with_country | map: "country" | uniq | sort %}
-        {% for country in countries %}
-          <button class="filter-option" data-country="{{ country }}">{{ country }}</button>
+        {% assign used_codes = posts_with_country | map: "country" | uniq %}
+        {% for entry in site.data.countries %}
+          {% if used_codes contains entry.code %}
+            <button class="filter-option" role="option" data-country="{{ entry.code }}">{{ entry.name }}</button>
+          {% endif %}
         {% endfor %}
       </div>
     </div>

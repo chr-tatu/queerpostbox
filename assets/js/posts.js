@@ -8,6 +8,7 @@ let currentHoveredItem = null;
 // Cached DOM references (set in DOMContentLoaded)
 let postcardModal, replyModal, sendModal, cardContainer;
 let frontImg, backImg, numberEl;
+let postcardItems;
 
 // ==================
 // Country Filter
@@ -27,21 +28,43 @@ function initFilters() {
   });
 
   const filterOptions = document.querySelectorAll('.filter-option');
+  const clearBtn = document.querySelector('.filter-clear');
+  const countryBtn = document.querySelector('.filter-name[data-filter="country"]');
+
+  function applyCountryFilter() {
+    const activeCountries = Array.from(filterOptions)
+      .filter(o => o.classList.contains('active'))
+      .map(o => o.dataset.country);
+
+    if (activeCountries.length === 0) {
+      clearBtn.classList.add('active');
+      countryBtn.classList.remove('has-selection');
+      clearFilter();
+    } else {
+      clearBtn.classList.remove('active');
+      countryBtn.classList.add('has-selection');
+      postcardItems.forEach(item => {
+        if (activeCountries.includes(item.dataset.country)) {
+          item.classList.remove('filtered-out');
+        } else {
+          item.classList.add('filtered-out');
+        }
+      });
+    }
+  }
+
   filterOptions.forEach(option => {
     option.addEventListener('click', () => {
-      const country = option.dataset.country;
-      const wasActive = option.classList.contains('active');
-
-      // Deselect all
-      filterOptions.forEach(o => o.classList.remove('active'));
-
-      if (!wasActive) {
-        option.classList.add('active');
-        filterByCountry(country);
-      } else {
-        clearFilter();
-      }
+      option.classList.toggle('active');
+      applyCountryFilter();
     });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    filterOptions.forEach(o => o.classList.remove('active'));
+    clearBtn.classList.add('active');
+    countryBtn.classList.remove('has-selection');
+    clearFilter();
   });
 }
 
@@ -430,6 +453,8 @@ document.addEventListener('DOMContentLoaded', function() {
   backImg = postcardModal.querySelector('.modal-back-img');
   numberEl = postcardModal.querySelector('.modal-postcard-number');
 
+  postcardItems = document.querySelectorAll('.postcard-item');
+
   initFilters();
 
   // Delegated click handler for postcard grid
@@ -530,7 +555,6 @@ document.addEventListener('DOMContentLoaded', function() {
   // ==================
   // Scroll Inertia Effect
   // ==================
-  const postcardItems = document.querySelectorAll('.postcard-item');
 
   // Each card tracks its own offset that lags behind scroll
   var cardOffsets = new Array(postcardItems.length);

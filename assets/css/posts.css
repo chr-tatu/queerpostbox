@@ -9,7 +9,7 @@
 /* Sidebar */
 .sidebar {
   flex-shrink: 0;
-  width: 155px;
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -25,6 +25,30 @@
   flex-direction: column;
   gap: 8px;
   padding: 32px 0;
+}
+
+.filter-clear {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-gray-5);
+  transition: color 0.2s;
+}
+
+.filter-clear:hover {
+  color: var(--color-lavender);
+}
+
+.filter-clear.active {
+  color: var(--color-lavender);
+  font-weight: 700;
 }
 
 .filter-name {
@@ -50,7 +74,8 @@
   transform: rotate(90deg);
 }
 
-.filter-name.expanded .filter-label {
+.filter-name.has-selection {
+  color: var(--color-lavender);
   font-weight: 700;
 }
 
@@ -66,7 +91,7 @@
   flex-direction: column;
   gap: 4px;
   padding: 0 0 8px 8px;
-  max-height: 400px;
+  max-height: var(--filter-list-max-height, calc(100vh - 380px));
   overflow-y: auto;
 }
 
@@ -95,7 +120,6 @@
 .filter-option.active {
   background: var(--color-lavender-bright);
   color: var(--color-lavender-dark);
-  font-weight: 700;
 }
 
 /* Send postcard button — fixed bottom-left */
