@@ -28,23 +28,6 @@
   --color-overlay: rgba(40, 36, 58, 0.63);
   --color-warning: #FE093B;
 
-  /* Logo sizing — desktop */
-  --font-size-logo-queer: 42px;
-  --font-size-logo-postbox: 32px;
-  --font-size-logo-subtitle: 16px;
-  --size-logo-lines-w: 120px;
-  --size-logo-lines-h: 68px;
-  --offset-logo-lines-left: 130px;
-
-  /* Layout sizing */
-  --width-sidebar: 160px;
-
-  /* Button & icon sizing — desktop */
-  --size-icon-action: 72px;
-  --size-icon-send-w: 52px;
-  --size-icon-send-h: 36px;
-  --font-size-send-label: 16px;
-
   /* Fonts */
   --font-display: 'Albert Sans', sans-serif;
   --font-body: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', sans-serif;
@@ -72,7 +55,7 @@ body {
   top: 0;
   z-index: 2100;
   background: var(--color-white);
-  padding: 32px 25px 16px;
+  padding: 32px 25px 0;
 }
 
 /* Drop header behind modal overlay when modal is open */
@@ -89,7 +72,7 @@ body {
 .logo-queer {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--font-size-logo-queer);
+  font-size: 42px;
   line-height: 1;
   letter-spacing: -1.68px;
   color: var(--color-lavender);
@@ -99,7 +82,7 @@ body {
 .logo-postbox {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: var(--font-size-logo-postbox);
+  font-size: 32px;
   line-height: 1;
   letter-spacing: -0.96px;
   color: var(--color-gray-5);
@@ -110,7 +93,7 @@ body {
 .logo-subtitle {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: var(--font-size-logo-subtitle);
+  font-size: 16px;
   line-height: 20px;
   letter-spacing: 1.5px;
   color: var(--color-gray-4);
@@ -122,9 +105,9 @@ body {
 .logo-lines {
   position: absolute;
   top: 0;
-  left: var(--offset-logo-lines-left);
-  width: var(--size-logo-lines-w);
-  height: var(--size-logo-lines-h);
+  left: 130px;
+  width: 120px;
+  height: 68px;
 }
 
 /* Page content */
@@ -190,40 +173,7 @@ body {
 }
 
 /* Responsive */
-
-/* Tablet */
-@media (max-width: 1024px) {
-  :root {
-    --font-size-logo-queer: 34px;
-    --font-size-logo-postbox: 26px;
-    --font-size-logo-subtitle: 14px;
-    --size-logo-lines-w: 96px;
-    --size-logo-lines-h: 55px;
-    --offset-logo-lines-left: 104px;
-    --width-sidebar: 148px;
-    --size-icon-action: 56px;
-    --size-icon-send-w: 44px;
-    --size-icon-send-h: 30px;
-    --font-size-send-label: 14px;
-  }
-}
-
-/* Mobile */
 @media (max-width: 768px) {
-  :root {
-    --font-size-logo-queer: 34px;
-    --font-size-logo-postbox: 26px;
-    --font-size-logo-subtitle: 14px;
-    --size-logo-lines-w: 96px;
-    --size-logo-lines-h: 55px;
-    --offset-logo-lines-left: 104px;
-    --width-sidebar: 148px;
-    --size-icon-action: 56px;
-    --size-icon-send-w: 40px;
-    --size-icon-send-h: 28px;
-    --font-size-send-label: 13px;
-  }
-
   .site-header {
     padding: 16px;
   }

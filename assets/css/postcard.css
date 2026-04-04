@@ -10,7 +10,7 @@
 /* Sidebar — mirrors .sidebar from posts.css */
 .postcard-sidebar {
   flex-shrink: 0;
-  width: var(--width-sidebar);
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -186,7 +186,7 @@
 }
 
 .postcard-viewer-icon {
-  width: var(--size-icon-action);
+  width: 72px;
   height: auto;
 }
 
@@ -235,12 +235,6 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .postcard-page {
-    padding: 0 24px 32px;
-  }
-}
-
 @media (max-width: 768px) {
   .postcard-page {
     flex-direction: column;

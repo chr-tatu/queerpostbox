@@ -9,7 +9,7 @@
 /* Sidebar */
 .sidebar {
   flex-shrink: 0;
-  width: var(--width-sidebar);
+  width: 200px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -128,7 +128,7 @@
   position: fixed;
   bottom: 32px;
   left: 32px;
-  width: var(--width-sidebar);
+  width: 200px;
   z-index: 100;
   display: flex;
   flex-direction: column;
@@ -255,8 +255,8 @@
 }
 
 .send-icon {
-  width: var(--size-icon-send-w);
-  height: var(--size-icon-send-h);
+  width: 64px;
+  height: 44px;
   transition: transform 0.3s ease;
 }
 
@@ -267,7 +267,7 @@
 .send-label {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: var(--font-size-send-label);
+  font-size: 18px;
   color: var(--color-gray-4);
 }
 
@@ -528,7 +528,7 @@
 }
 
 .modal-action-icon {
-  width: var(--size-icon-action);
+  width: 72px;
   height: auto;
 }
 
@@ -766,16 +766,6 @@
   .postcard-grid {
     columns: 2;
   }
-
-  .landing-layout {
-    padding: 0 24px 24px;
-  }
-
-  .send-postcard-btn {
-    left: 24px;
-    width: var(--width-sidebar);
-    padding: 12px 20px 10px;
-  }
 }
 
 @media (max-width: 768px) {
@@ -819,6 +809,15 @@
     bottom: 16px;
     left: 16px;
     width: calc(100vw - 32px);
+  }
+
+  .send-icon {
+    width: 40px;
+    height: 28px;
+  }
+
+  .send-label {
+    font-size: 13px;
   }
 
   .reply-card {
