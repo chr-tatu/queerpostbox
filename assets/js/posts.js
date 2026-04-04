@@ -27,21 +27,44 @@ function initFilters() {
   });
 
   const filterOptions = document.querySelectorAll('.filter-option');
+  const clearBtn = document.querySelector('.filter-clear');
+  const countryBtn = document.querySelector('.filter-name[data-filter="country"]');
+
+  function applyCountryFilter() {
+    const activeCountries = Array.from(filterOptions)
+      .filter(o => o.classList.contains('active'))
+      .map(o => o.dataset.country);
+
+    if (activeCountries.length === 0) {
+      clearBtn.classList.add('active');
+      countryBtn.classList.remove('has-selection');
+      clearFilter();
+    } else {
+      clearBtn.classList.remove('active');
+      countryBtn.classList.add('has-selection');
+      const items = document.querySelectorAll('.postcard-item');
+      items.forEach(item => {
+        if (activeCountries.includes(item.dataset.country)) {
+          item.classList.remove('filtered-out');
+        } else {
+          item.classList.add('filtered-out');
+        }
+      });
+    }
+  }
+
   filterOptions.forEach(option => {
     option.addEventListener('click', () => {
-      const country = option.dataset.country;
-      const wasActive = option.classList.contains('active');
-
-      // Deselect all
-      filterOptions.forEach(o => o.classList.remove('active'));
-
-      if (!wasActive) {
-        option.classList.add('active');
-        filterByCountry(country);
-      } else {
-        clearFilter();
-      }
+      option.classList.toggle('active');
+      applyCountryFilter();
     });
+  });
+
+  clearBtn.addEventListener('click', () => {
+    filterOptions.forEach(o => o.classList.remove('active'));
+    clearBtn.classList.add('active');
+    countryBtn.classList.remove('has-selection');
+    clearFilter();
   });
 }
 
