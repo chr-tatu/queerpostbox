@@ -1,0 +1,47 @@
+name: Mark Notion task Done on PR merge
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  update-notion:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Notion page ID and mark Done
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Extract Notion page URL from line like: Notion: [QPB-ID](page_URL)
+          PAGE_URL=$(echo "$PR_BODY" | grep -oP '(?<=Notion: \[)[^\]]+\]\(\K[^)]+')
+
+          if [ -z "$PAGE_URL" ]; then
+            echo "No Notion link found in PR description, skipping."
+            exit 0
+          fi
+
+          # Extract the 32-char page ID from the URL (last path segment, strip hyphens)
+          PAGE_ID=$(echo "$PAGE_URL" | grep -oE '[0-9a-f-]{36}|[0-9a-f]{32}' | tail -1 | tr -d '-')
+
+          if [ -z "$PAGE_ID" ] || ! [[ "$PAGE_ID" =~ ^[0-9a-f]{32}$ ]]; then
+            echo "Could not parse a valid Notion page ID from URL: $PAGE_URL"
+            exit 1
+          fi
+
+          echo "Updating Notion page $PAGE_ID to Done..."
+          RESPONSE=$(curl -s -o /tmp/notion_response.json -w "%{http_code}" \
+            -X PATCH "https://api.notion.com/v1/pages/$PAGE_ID" \
+            -H "Authorization: Bearer $NOTION_TOKEN" \
+            -H "Notion-Version: 2022-06-28" \
+            -H "Content-Type: application/json" \
+            -d '{"properties": {"Status": {"status": {"name": "Done"}}}}')
+
+          cat /tmp/notion_response.json
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Notion API returned HTTP $RESPONSE"
+            exit 1
+          fi
+
+          echo "Successfully marked Notion task as Done."
