@@ -31,8 +31,10 @@
   /* Logo sizing — desktop */
   --font-size-logo-queer: 42px;
   --font-size-logo-postbox: 32px;
+  --font-size-logo-subtitle: 16px;
   --size-logo-lines-w: 120px;
   --size-logo-lines-h: 68px;
+  --offset-logo-lines-left: 130px;
 
   /* Layout sizing */
   --width-sidebar: 160px;
@@ -108,7 +110,7 @@ body {
 .logo-subtitle {
   font-family: var(--font-body);
   font-weight: 400;
-  font-size: 16px;
+  font-size: var(--font-size-logo-subtitle);
   line-height: 20px;
   letter-spacing: 1.5px;
   color: var(--color-gray-4);
@@ -120,7 +122,7 @@ body {
 .logo-lines {
   position: absolute;
   top: 0;
-  left: 130px;
+  left: var(--offset-logo-lines-left);
   width: var(--size-logo-lines-w);
   height: var(--size-logo-lines-h);
 }
@@ -194,8 +196,10 @@ body {
   :root {
     --font-size-logo-queer: 34px;
     --font-size-logo-postbox: 26px;
+    --font-size-logo-subtitle: 14px;
     --size-logo-lines-w: 96px;
     --size-logo-lines-h: 55px;
+    --offset-logo-lines-left: 104px;
     --width-sidebar: 148px;
     --size-icon-action: 56px;
     --size-icon-send-w: 44px;
@@ -209,8 +213,10 @@ body {
   :root {
     --font-size-logo-queer: 34px;
     --font-size-logo-postbox: 26px;
+    --font-size-logo-subtitle: 14px;
     --size-logo-lines-w: 96px;
     --size-logo-lines-h: 55px;
+    --offset-logo-lines-left: 104px;
     --width-sidebar: 148px;
     --size-icon-action: 56px;
     --size-icon-send-w: 40px;
