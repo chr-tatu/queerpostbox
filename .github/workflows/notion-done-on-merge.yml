@@ -25,8 +25,8 @@ jobs:
           # Extract the 32-char page ID from the URL (last path segment, strip hyphens)
           PAGE_ID=$(echo "$PAGE_URL" | grep -oE '[0-9a-f-]{36}|[0-9a-f]{32}' | tail -1 | tr -d '-')
 
-          if [ -z "$PAGE_ID" ]; then
-            echo "Could not parse Notion page ID from URL: $PAGE_URL"
+          if [ -z "$PAGE_ID" ] || ! [[ "$PAGE_ID" =~ ^[0-9a-f]{32}$ ]]; then
+            echo "Could not parse a valid Notion page ID from URL: $PAGE_URL"
             exit 1
           fi
 
