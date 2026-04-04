@@ -4,6 +4,8 @@ let isFlipped = false;
 let lastScrollY = window.scrollY;
 let scrollDirection = 'down';
 let currentHoveredItem = null;
+let currentAudio = null;
+let isAudioPlaying = false;
 
 // Cached DOM references (set in DOMContentLoaded)
 let postcardModal, replyModal, sendModal, cardContainer;
@@ -152,6 +154,11 @@ function openModal(postcardElement, skipAnimation) {
   cardContainer.classList.remove('flipped');
   updateModalButtons();
 
+  // Auto-play audio if available
+  if (postcardElement.dataset.audio) {
+    startAudio(postcardElement.dataset.audio);
+  }
+
   // Update URL to real postcard permalink
   history.pushState({ postcardSlug: postcardElement.dataset.slug }, title, permalink);
 
@@ -293,6 +300,9 @@ function openModal(postcardElement, skipAnimation) {
 }
 
 function closeModal(fromPopstate) {
+  // Stop audio playback
+  stopAudio();
+
   // Abort any in-progress fly-in animation
   if (postcardModal._abortFlyIn) postcardModal._abortFlyIn();
 
@@ -424,12 +434,89 @@ function updateModalButtons() {
   const listenBtn = postcardModal.querySelector('.modal-listen-btn');
   const readBtn = postcardModal.querySelector('.modal-read-btn');
 
+  // Listen button: visible if postcard has audio, regardless of flip state
+  const hasAudio = currentPostcard && currentPostcard.dataset.audio;
+  listenBtn.style.display = hasAudio ? 'flex' : 'none';
+
+  // Read button: visible only when flipped
   if (isFlipped) {
-    listenBtn.style.display = 'flex';
     readBtn.style.display = 'flex';
   } else {
-    listenBtn.style.display = 'none';
     readBtn.style.display = 'none';
+  }
+}
+
+function handleAudioEnd() {
+  isAudioPlaying = false;
+  updateListenButtonState();
+}
+
+function handleAudioError() {
+  isAudioPlaying = false;
+  currentAudio = null;
+  updateListenButtonState();
+}
+
+function startAudio(src) {
+  stopAudio();
+  currentAudio = new Audio(src);
+  currentAudio.addEventListener('ended', handleAudioEnd);
+  currentAudio.addEventListener('error', handleAudioError);
+  var audio = currentAudio;
+  audio.play().then(function() {
+    if (audio !== currentAudio) return;
+    isAudioPlaying = true;
+    updateListenButtonState();
+  }).catch(function() {
+    if (audio !== currentAudio) return;
+    // Autoplay blocked or file missing — user can click listen to retry
+    isAudioPlaying = false;
+    updateListenButtonState();
+  });
+}
+
+function stopAudio() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.removeEventListener('ended', handleAudioEnd);
+    currentAudio.removeEventListener('error', handleAudioError);
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  isAudioPlaying = false;
+  updateListenButtonState();
+}
+
+function toggleAudio() {
+  if (!currentPostcard || !currentPostcard.dataset.audio) return;
+  if (isAudioPlaying && currentAudio) {
+    currentAudio.pause();
+    isAudioPlaying = false;
+    updateListenButtonState();
+  } else if (currentAudio && currentAudio.src) {
+    var audio = currentAudio;
+    audio.play().then(function() {
+      if (audio !== currentAudio) return;
+      isAudioPlaying = true;
+      updateListenButtonState();
+    }).catch(function() {
+      if (audio !== currentAudio) return;
+      isAudioPlaying = false;
+      updateListenButtonState();
+    });
+  } else {
+    startAudio(currentPostcard.dataset.audio);
+  }
+}
+
+function updateListenButtonState() {
+  const listenBtn = postcardModal.querySelector('.modal-listen-btn');
+  if (isAudioPlaying) {
+    listenBtn.classList.add('playing');
+    listenBtn.setAttribute('aria-label', 'Stop audio');
+  } else {
+    listenBtn.classList.remove('playing');
+    listenBtn.setAttribute('aria-label', 'Listen to postcard');
   }
 }
 
@@ -543,11 +630,13 @@ document.addEventListener('DOMContentLoaded', function() {
     openModalBySlug(hash);
   }
 
-  // Listen/Read buttons (no-op for now)
+  // Listen button — toggle audio playback
   postcardModal.querySelector('.modal-listen-btn').addEventListener('click', function(e) {
     e.stopPropagation();
+    toggleAudio();
   });
 
+  // Read button (no-op for now)
   postcardModal.querySelector('.modal-read-btn').addEventListener('click', function(e) {
     e.stopPropagation();
   });

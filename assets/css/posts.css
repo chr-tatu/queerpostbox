@@ -493,6 +493,20 @@
   height: auto;
 }
 
+/* Listen button playing state */
+.modal-listen-btn.playing {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.modal-listen-btn.playing .modal-action-icon {
+  filter: drop-shadow(0 0 6px rgba(195, 177, 225, 0.7));
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
 /* Down arrow to reply */
 .modal-arrow-down {
   background: rgba(40, 36, 58, 0.5);
