@@ -247,6 +247,10 @@
   .postcard-back-link {
     margin-top: 16px;
   }
+
+  .postcard-viewer-img {
+    max-height: calc(100vh - 320px);
+  }
 }
 
 @media (max-width: 768px) {
