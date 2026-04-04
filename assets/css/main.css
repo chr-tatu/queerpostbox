@@ -38,6 +38,7 @@
 
   /* Layout sizing */
   --width-sidebar: 160px;
+  --sticky-top-sidebar: 140px;
 
   /* Button & icon sizing — desktop */
   --size-icon-action: 72px;
@@ -201,6 +202,7 @@ body {
     --size-logo-lines-h: 55px;
     --offset-logo-lines-left: 104px;
     --width-sidebar: 148px;
+    --sticky-top-sidebar: 130px;
     --size-icon-action: 56px;
     --size-icon-send-w: 44px;
     --size-icon-send-h: 30px;
@@ -218,6 +220,7 @@ body {
     --size-logo-lines-h: 55px;
     --offset-logo-lines-left: 104px;
     --width-sidebar: 148px;
+    --sticky-top-sidebar: 110px;
     --size-icon-action: 56px;
     --size-icon-send-w: 40px;
     --size-icon-send-h: 28px;
