@@ -120,10 +120,20 @@ layout: default
     function updateReadOverlaySize() {
       if (!readOverlay) return;
       var img = document.querySelector('.postcard-viewer-back .postcard-viewer-img');
-      if (!img) return;
+      if (!img || !img.naturalWidth || !img.naturalHeight) return;
       var rect = img.getBoundingClientRect();
-      readOverlay.style.setProperty('--visible-img-width', rect.width + 'px');
-      readOverlay.style.setProperty('--visible-img-height', rect.height + 'px');
+      var natRatio = img.naturalWidth / img.naturalHeight;
+      var elemRatio = rect.width / rect.height;
+      var visW, visH;
+      if (elemRatio > natRatio) {
+        visH = rect.height;
+        visW = rect.height * natRatio;
+      } else {
+        visW = rect.width;
+        visH = rect.width / natRatio;
+      }
+      readOverlay.style.setProperty('--visible-img-width', visW + 'px');
+      readOverlay.style.setProperty('--visible-img-height', visH + 'px');
     }
 
     function toggleReadOverlay() {
