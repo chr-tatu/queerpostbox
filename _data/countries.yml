@@ -44,6 +44,8 @@
   name: Netherlands
 - code: NZ
   name: New Zealand
+- code: "NO"
+  name: Norway
 - code: PT
   name: Portugal
 - code: SG
