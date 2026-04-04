@@ -510,6 +510,25 @@ function toggleAudio() {
   }
 }
 
+function updateReadOverlaySize() {
+  var overlay = postcardModal.querySelector('.modal-read-overlay');
+  var img = backImg;
+  if (!img.naturalWidth || !img.naturalHeight) return;
+  var imgRect = img.getBoundingClientRect();
+  var natRatio = img.naturalWidth / img.naturalHeight;
+  var elemRatio = imgRect.width / imgRect.height;
+  var visW, visH;
+  if (elemRatio > natRatio) {
+    visH = imgRect.height;
+    visW = imgRect.height * natRatio;
+  } else {
+    visW = imgRect.width;
+    visH = imgRect.width / natRatio;
+  }
+  overlay.style.setProperty('--visible-img-width', visW + 'px');
+  overlay.style.setProperty('--visible-img-height', visH + 'px');
+}
+
 function toggleReadOverlay() {
   var overlay = postcardModal.querySelector('.modal-read-overlay');
   var readBtn = postcardModal.querySelector('.modal-read-btn');
@@ -523,6 +542,7 @@ function toggleReadOverlay() {
     if (currentPostcard && currentPostcard.dataset.content) {
       postcardModal.querySelector('.modal-read-text').innerHTML = currentPostcard.dataset.content;
     }
+    updateReadOverlaySize();
     overlay.classList.add('active');
     readBtn.classList.add('reading');
     readBtn.setAttribute('aria-label', 'Hide transcript');

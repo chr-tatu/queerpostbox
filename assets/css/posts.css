@@ -510,7 +510,11 @@
 /* Read transcript overlay */
 .modal-read-overlay {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--visible-img-width, 100%);
+  height: var(--visible-img-height, 100%);
   background: rgba(255, 255, 255, 0.92);
   display: flex;
   align-items: center;
@@ -520,6 +524,7 @@
   pointer-events: none;
   transition: opacity 0.3s ease;
   border-radius: 2px;
+  overflow-y: auto;
 }
 
 .modal-read-overlay.active {
