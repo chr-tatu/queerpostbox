@@ -2,11 +2,12 @@
 layout: default
 title: Privacy Policy
 permalink: /privacy/
+last_updated: 2026-04-04
 ---
 
 # Privacy Policy
 
-**Last updated:** {{ site.time | date: "%B %d, %Y" }}
+**Last updated:** {{ page.last_updated | date: "%B %d, %Y" }}
 
 ## What we collect
 
