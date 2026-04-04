@@ -781,7 +781,7 @@
 @media (max-width: 768px) {
   .landing-layout {
     flex-direction: column;
-    padding: 0 16px 16px;
+    padding: 0 16px 96px;
   }
 
   .sidebar {
@@ -805,7 +805,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 8px;
-    z-index: 100;
+    z-index: 200;
     max-height: 300px;
     top: 100%;
     left: 0;
@@ -819,6 +819,12 @@
     bottom: 16px;
     left: 16px;
     width: calc(100vw - 32px);
+    flex-direction: row;
+    gap: 12px;
+    padding: 12px 24px;
+    background: var(--color-white);
+    box-shadow: 0 2px 12px rgba(84, 65, 171, 0.18);
+    border-radius: 16px;
   }
 
   .reply-card {

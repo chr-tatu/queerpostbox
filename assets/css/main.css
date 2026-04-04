@@ -222,9 +222,9 @@ body {
     --offset-logo-lines-left: 104px;
     --width-sidebar: 148px;
     --sticky-top-sidebar: 110px;
-    --size-icon-action: 56px;
-    --size-icon-send-w: 40px;
-    --size-icon-send-h: 28px;
+    --size-icon-action: 46px;
+    --size-icon-send-w: 36px;
+    --size-icon-send-h: 25px;
     --font-size-send-label: 13px;
   }
 

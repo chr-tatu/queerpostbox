@@ -252,29 +252,32 @@
   .postcard-page {
     flex-direction: column;
     padding: 0 16px 32px;
+    gap: 8px;
   }
 
+  /* Make sidebar transparent so its children reorder within postcard-page */
   .postcard-sidebar {
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    position: static;
-    padding: 16px 0 0;
+    display: contents;
   }
 
   .postcard-back-link {
-    margin-top: 0;
+    order: 0;
+    margin-top: 16px;
+  }
+
+  .postcard-main {
+    order: 1;
   }
 
   .postcard-meta {
+    order: 2;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
-    border-top: none;
-    margin-top: 0;
-    padding: 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--color-gray-1);
+    margin-top: 4px;
   }
 
   .postcard-meta-item {
