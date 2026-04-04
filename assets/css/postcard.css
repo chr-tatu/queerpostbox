@@ -1,26 +1,80 @@
 /* Standalone postcard page (for direct visits / SEO) */
 
 .postcard-page {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 24px 32px 48px;
+  display: flex;
+  padding: 0 32px 32px;
+  gap: 16px;
+  min-height: calc(100vh - 180px);
+}
+
+/* Sidebar — mirrors .sidebar from posts.css */
+.postcard-sidebar {
+  flex-shrink: 0;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 2px;
+  position: sticky;
+  top: 120px;
+  align-self: flex-start;
 }
 
 .postcard-back-link {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 8px;
+  padding: 8px 0;
   font-family: var(--font-display);
-  font-size: 14px;
   font-weight: 500;
-  color: var(--color-gray-4);
+  font-size: 16px;
+  color: var(--color-gray-5);
   text-decoration: none;
-  margin-bottom: 24px;
   transition: color 0.2s;
+  margin-top: 32px;
 }
 
 .postcard-back-link:hover {
   color: var(--color-lavender);
+}
+
+/* Meta info */
+.postcard-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 24px 0;
+  border-top: 1px solid var(--color-gray-1);
+  margin-top: 16px;
+}
+
+.postcard-meta-item {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 14px;
+  margin: 0;
+  padding: 4px 0;
+}
+
+.postcard-meta-item strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--color-gray-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.postcard-meta-item span {
+  color: var(--color-gray-5);
+  margin-top: 2px;
+}
+
+/* Main content area */
+.postcard-main {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Viewer */
@@ -28,6 +82,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 32px;
 }
 
 .postcard-viewer-number {
@@ -78,17 +133,11 @@
   pointer-events: auto;
 }
 
-.postcard-viewer-front,
-.postcard-viewer-back {
-  display: flex;
-  justify-content: center;
-}
-
 .postcard-viewer-img {
-  max-width: 100%;
-  max-height: 65vh;
-  width: auto;
+  width: 100%;
   height: auto;
+  max-height: 65vh;
+  object-fit: contain;
   display: block;
   border-radius: 2px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(84, 65, 171, 0.2);
@@ -128,52 +177,75 @@
   height: auto;
 }
 
-/* Meta info */
-.postcard-meta {
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 1px solid var(--color-gray-1);
+/* Read overlay */
+.postcard-read-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--visible-img-width, 100%);
+  height: var(--visible-img-height, 100%);
+  background: rgba(255, 255, 255, 0.92);
   display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  border-radius: 2px;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-.postcard-meta-item {
+.postcard-read-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.postcard-read-text {
   font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--color-gray-4);
-  margin: 0;
-}
-
-.postcard-meta-item strong {
-  color: var(--color-gray-5);
-}
-
-/* Transcript */
-.postcard-transcript {
-  margin-top: 24px;
-  font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.7;
   color: var(--color-gray-5);
+  text-align: center;
+  max-width: 480px;
+  margin: 0;
 }
 
-.postcard-transcript p {
+.postcard-read-text p {
   margin: 0;
+}
+
+.postcard-read-btn.reading .postcard-viewer-icon {
+  filter: drop-shadow(0 0 6px rgba(195, 177, 225, 0.7));
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .postcard-page {
-    padding: 16px 16px 32px;
+    flex-direction: column;
+    padding: 0 16px 32px;
+  }
+
+  .postcard-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: static;
+    padding: 16px 0 0;
+  }
+
+  .postcard-back-link {
+    margin-top: 0;
+  }
+
+  .postcard-meta {
+    display: none;
   }
 
   .postcard-viewer-number {
     font-size: 20px;
-  }
-
-  .postcard-meta {
-    flex-direction: column;
-    gap: 8px;
   }
 }

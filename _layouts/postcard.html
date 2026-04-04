@@ -16,67 +16,109 @@ layout: default
 {% assign country_name = country_data.name | default: page.country %}
 
 <div class="postcard-page">
-  <a href="{{ '/posts.html' | relative_url }}" class="postcard-back-link">
-    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M6 1L1 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    All postcards
-  </a>
+  <aside class="postcard-sidebar">
+    <a href="{{ '/posts.html' | relative_url }}" class="postcard-back-link">All postcards</a>
 
-  <div class="postcard-viewer">
-    <span class="postcard-viewer-number">#{{ post_number }}</span>
+    <div class="postcard-meta">
+      <p class="postcard-meta-item"><strong>Country</strong><span>{{ country_name }}</span></p>
+      <p class="postcard-meta-item"><strong>Topic</strong><span>{{ page.topic }}</span></p>
+      <p class="postcard-meta-item"><strong>Date</strong><span>{{ page.date | date: "%B %d, %Y" }}</span></p>
+    </div>
+  </aside>
 
-    <div class="postcard-viewer-wrapper">
-      <div class="postcard-viewer-container" id="card-container">
-        <div class="postcard-viewer-front">
-          {% if page.image-front %}
-            <img src="{{ page.image-front | relative_url }}" alt="{{ page.title }} - Front" class="postcard-viewer-img">
-          {% endif %}
-        </div>
-        <div class="postcard-viewer-back">
-          {% if page.image-back %}
-            <img src="{{ page.image-back | relative_url }}" alt="{{ page.title }} - Back" class="postcard-viewer-img">
-          {% endif %}
+  <div class="postcard-main">
+    <div class="postcard-viewer">
+      <span class="postcard-viewer-number">#{{ post_number }}</span>
+
+      <div class="postcard-viewer-wrapper">
+        <div class="postcard-viewer-container" id="card-container">
+          <div class="postcard-viewer-front">
+            {% if page.image-front %}
+              <img src="{{ page.image-front | relative_url }}" alt="{{ page.title }} - Front" class="postcard-viewer-img">
+            {% endif %}
+          </div>
+          <div class="postcard-viewer-back">
+            {% if page.image-back %}
+              <img src="{{ page.image-back | relative_url }}" alt="{{ page.title }} - Back" class="postcard-viewer-img">
+            {% endif %}
+            {% if content != '' %}
+            <div class="postcard-read-overlay" id="read-overlay">
+              <div class="postcard-read-text">{{ content }}</div>
+            </div>
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="postcard-viewer-actions">
-      <div class="postcard-viewer-accessibility">
-        <button class="postcard-viewer-btn postcard-listen-btn" style="display:none">
-          <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="postcard-viewer-icon">
+      <div class="postcard-viewer-actions">
+        <div class="postcard-viewer-accessibility">
+          <button class="postcard-viewer-btn postcard-listen-btn" style="display:none">
+            <img src="{{ '/assets/icons/speaker.svg' | relative_url }}" alt="Listen" class="postcard-viewer-icon">
+          </button>
+          {% if content != '' %}
+          <button class="postcard-viewer-btn postcard-read-btn" style="display:none" aria-label="Read transcript">
+            <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="postcard-viewer-icon">
+          </button>
+          {% endif %}
+        </div>
+        <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
+          <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
         </button>
       </div>
-      <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
-        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
-      </button>
     </div>
-  </div>
-
-  {% if content != '' %}
-  <div class="postcard-transcript">
-    {{ content }}
-  </div>
-  {% endif %}
-
-  <div class="postcard-meta">
-    <p class="postcard-meta-item"><strong>Country:</strong> {{ country_name }}</p>
-    <p class="postcard-meta-item"><strong>Topic:</strong> {{ page.topic }}</p>
-    <p class="postcard-meta-item"><strong>Date:</strong> {{ page.date | date: "%B %d, %Y" }}</p>
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const container = document.getElementById('card-container');
-    const flipBtn = document.getElementById('flip-btn');
-    const listenBtn = document.querySelector('.postcard-listen-btn');
-    let isFlipped = false;
+    var container = document.getElementById('card-container');
+    var flipBtn = document.getElementById('flip-btn');
+    var listenBtn = document.querySelector('.postcard-listen-btn');
+    var readBtn = document.querySelector('.postcard-read-btn');
+    var readOverlay = document.getElementById('read-overlay');
+    var isFlipped = false;
 
     flipBtn.addEventListener('click', function() {
       isFlipped = !isFlipped;
       container.classList.toggle('flipped', isFlipped);
       listenBtn.style.display = isFlipped ? 'flex' : 'none';
+      if (readBtn) readBtn.style.display = isFlipped ? 'flex' : 'none';
+      if (!isFlipped) closeReadOverlay();
     });
+
+    if (readBtn && readOverlay) {
+      readBtn.addEventListener('click', function() {
+        toggleReadOverlay();
+      });
+    }
+
+    function updateReadOverlaySize() {
+      if (!readOverlay) return;
+      var img = document.querySelector('.postcard-viewer-back .postcard-viewer-img');
+      if (!img) return;
+      var rect = img.getBoundingClientRect();
+      readOverlay.style.setProperty('--visible-img-width', rect.width + 'px');
+      readOverlay.style.setProperty('--visible-img-height', rect.height + 'px');
+    }
+
+    function toggleReadOverlay() {
+      if (readOverlay.classList.contains('active')) {
+        closeReadOverlay();
+      } else {
+        updateReadOverlaySize();
+        readOverlay.classList.add('active');
+        readBtn.classList.add('reading');
+        readBtn.setAttribute('aria-label', 'Hide transcript');
+      }
+    }
+
+    function closeReadOverlay() {
+      if (!readOverlay) return;
+      readOverlay.classList.remove('active');
+      if (readBtn) {
+        readBtn.classList.remove('reading');
+        readBtn.setAttribute('aria-label', 'Read transcript');
+      }
+    }
   });
 </script>
