@@ -462,10 +462,13 @@ function startAudio(src) {
   currentAudio = new Audio(src);
   currentAudio.addEventListener('ended', handleAudioEnd);
   currentAudio.addEventListener('error', handleAudioError);
-  currentAudio.play().then(function() {
+  var audio = currentAudio;
+  audio.play().then(function() {
+    if (audio !== currentAudio) return;
     isAudioPlaying = true;
     updateListenButtonState();
   }).catch(function() {
+    if (audio !== currentAudio) return;
     // Autoplay blocked or file missing — user can click listen to retry
     isAudioPlaying = false;
     updateListenButtonState();
@@ -491,10 +494,13 @@ function toggleAudio() {
     isAudioPlaying = false;
     updateListenButtonState();
   } else if (currentAudio && currentAudio.src) {
-    currentAudio.play().then(function() {
+    var audio = currentAudio;
+    audio.play().then(function() {
+      if (audio !== currentAudio) return;
       isAudioPlaying = true;
       updateListenButtonState();
     }).catch(function() {
+      if (audio !== currentAudio) return;
       isAudioPlaying = false;
       updateListenButtonState();
     });
