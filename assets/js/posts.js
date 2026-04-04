@@ -446,18 +446,27 @@ function updateModalButtons() {
   }
 }
 
+function handleAudioEnd() {
+  isAudioPlaying = false;
+  updateListenButtonState();
+}
+
+function handleAudioError() {
+  isAudioPlaying = false;
+  currentAudio = null;
+  updateListenButtonState();
+}
+
 function startAudio(src) {
   stopAudio();
   currentAudio = new Audio(src);
-  currentAudio.addEventListener('ended', function() {
-    isAudioPlaying = false;
-    updateListenButtonState();
-  });
+  currentAudio.addEventListener('ended', handleAudioEnd);
+  currentAudio.addEventListener('error', handleAudioError);
   currentAudio.play().then(function() {
     isAudioPlaying = true;
     updateListenButtonState();
   }).catch(function() {
-    // Autoplay blocked — user can click listen to start
+    // Autoplay blocked or file missing — user can click listen to retry
     isAudioPlaying = false;
     updateListenButtonState();
   });
@@ -466,6 +475,8 @@ function startAudio(src) {
 function stopAudio() {
   if (currentAudio) {
     currentAudio.pause();
+    currentAudio.removeEventListener('ended', handleAudioEnd);
+    currentAudio.removeEventListener('error', handleAudioError);
     currentAudio.currentTime = 0;
     currentAudio = null;
   }
@@ -478,14 +489,18 @@ function toggleAudio() {
   if (isAudioPlaying && currentAudio) {
     currentAudio.pause();
     isAudioPlaying = false;
+    updateListenButtonState();
   } else if (currentAudio && currentAudio.src) {
-    currentAudio.play();
-    isAudioPlaying = true;
+    currentAudio.play().then(function() {
+      isAudioPlaying = true;
+      updateListenButtonState();
+    }).catch(function() {
+      isAudioPlaying = false;
+      updateListenButtonState();
+    });
   } else {
     startAudio(currentPostcard.dataset.audio);
-    return;
   }
-  updateListenButtonState();
 }
 
 function updateListenButtonState() {
