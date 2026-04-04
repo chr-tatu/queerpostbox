@@ -108,7 +108,7 @@ layout: default
     flipBtn.addEventListener('click', function() {
       isFlipped = !isFlipped;
       container.classList.toggle('flipped', isFlipped);
-      listenBtn.style.display = isFlipped ? 'flex' : 'none';
+      if (listenBtn) listenBtn.style.display = isFlipped ? 'flex' : 'none';
       if (readBtn) readBtn.style.display = isFlipped ? 'flex' : 'none';
       if (!isFlipped) closeReadOverlay();
     });
