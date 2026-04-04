@@ -85,6 +85,15 @@
   padding-top: 32px;
 }
 
+.postcard-viewer-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: center;
+  width: var(--img-width, 100%);
+  margin-bottom: 8px;
+}
+
 .postcard-viewer-number {
   font-family: var(--font-display);
   font-weight: 500;
@@ -98,10 +107,6 @@
     rgba(253, 224, 118, 0.55)
   );
   border-radius: 20px;
-  align-self: center;
-  width: var(--img-width, 100%);
-  box-sizing: border-box;
-  margin-bottom: 8px;
 }
 
 .postcard-viewer-wrapper {
