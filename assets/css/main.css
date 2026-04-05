@@ -50,6 +50,18 @@
   /* Fonts */
   --font-display: 'Albert Sans', sans-serif;
   --font-body: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', sans-serif;
+
+  /* Z-index stacking layers */
+  --z-postcard-hover: 2;
+  --z-mobile-sidebar: 10;
+  --z-send-btn: 100;
+  --z-filter-dropdown: 200;
+  --z-modal-overlay: 2000;
+  --z-header: 2100;
+  --z-fullscreen: 3000;
+
+  /* Breakpoints (reference only — CSS vars can't be used in @media queries)
+     mobile: 768px  |  tablet: 1024px */
 }
 
 /* Reset */
@@ -72,7 +84,7 @@ body {
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 2100;
+  z-index: var(--z-header);
   background: var(--color-white);
   padding: 32px 25px 16px; /* 16px bottom gives breathing room below the logo */
 }

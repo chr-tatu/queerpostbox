@@ -129,7 +129,7 @@
   bottom: 32px;
   left: 32px;
   width: var(--width-sidebar);
-  z-index: 100;
+  z-index: var(--z-send-btn);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -298,7 +298,7 @@
 .postcard-item:hover {
   scale: 1.04;
   box-shadow: 0 6px 16px rgba(84, 65, 171, 0.35);
-  z-index: 2;
+  z-index: var(--z-postcard-hover);
 }
 
 .postcard-link {
@@ -330,7 +330,7 @@
   width: 81px;
   height: 81px;
   overflow: hidden;
-  z-index: 2;
+  z-index: var(--z-postcard-hover);
   pointer-events: none;
 }
 
@@ -362,7 +362,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: var(--z-modal-overlay);
 }
 
 .modal-overlay.active {
@@ -609,7 +609,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 3000;
+  z-index: var(--z-fullscreen);
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.3);
@@ -791,7 +791,7 @@
     justify-content: space-between;
     position: relative;
     top: auto;
-    z-index: 10;
+    z-index: var(--z-mobile-sidebar);
   }
 
   .filters {
@@ -808,7 +808,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 8px;
-    z-index: 200;
+    z-index: var(--z-filter-dropdown);
     max-height: 300px;
     top: 100%;
     left: 0;
@@ -826,7 +826,7 @@
     top: auto;
     right: auto;
     width: var(--width-sidebar);
-    z-index: 100;
+    z-index: var(--z-send-btn);
     background: var(--color-white);
     border-radius: 20px;
     border: 2px solid var(--color-lavender);
