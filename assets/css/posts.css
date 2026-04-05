@@ -876,28 +876,6 @@
   }
 }
 
-/* Share toast notification */
-#share-toast {
-  position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%) translateY(8px);
-  background: rgba(40, 36, 58, 0.9);
-  color: #FFFCFA;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-  z-index: 9999;
-}
-
-#share-toast.visible {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
 
 @media (prefers-reduced-motion: reduce) {
   .send-postcard-btn::after {
