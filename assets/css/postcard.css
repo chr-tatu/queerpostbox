@@ -169,6 +169,12 @@
   gap: 16px;
 }
 
+.postcard-viewer-right-btns {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
 .postcard-viewer-btn {
   display: flex;
   align-items: center;

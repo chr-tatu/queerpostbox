@@ -496,6 +496,7 @@
   object-fit: contain;
   display: block;
   border-radius: 2px;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
 }
 
 /* Bottom section: accessibility + flip */
@@ -510,6 +511,12 @@
 .modal-accessibility-btns {
   display: flex;
   gap: 16px;
+}
+
+.modal-right-btns {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
 
 .modal-action-btn {
@@ -868,6 +875,7 @@
     columns: 1;
   }
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   .send-postcard-btn::after {

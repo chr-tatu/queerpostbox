@@ -70,13 +70,20 @@ layout: default
           </button>
           {% endif %}
         </div>
-        <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
-          <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
-        </button>
+        <div class="postcard-viewer-right-btns">
+          <button class="postcard-viewer-btn postcard-share-btn" aria-label="Share postcard">
+            <img src="{{ '/assets/icons/share.svg' | relative_url }}" alt="Share" class="postcard-viewer-icon">
+          </button>
+          <button class="postcard-viewer-btn postcard-flip-btn" id="flip-btn">
+            <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="postcard-viewer-icon">
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<div id="share-toast" role="alert" aria-live="assertive"></div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -107,6 +114,40 @@ layout: default
       updateViewerSize();
       if (readOverlay && readOverlay.classList.contains('active')) updateReadOverlaySize();
     });
+
+    var shareBtn = document.querySelector('.postcard-share-btn');
+    var shareToast = document.getElementById('share-toast');
+    var shareToastTimer = null;
+    if (shareBtn) {
+      shareBtn.addEventListener('click', function() {
+        var url = window.location.href;
+        var title = document.title;
+        function showToast() {
+          if (!shareToast) return;
+          shareToast.textContent = 'Link copied!';
+          shareToast.classList.add('visible');
+          clearTimeout(shareToastTimer);
+          shareToastTimer = setTimeout(function() {
+            shareToast.classList.remove('visible');
+            shareToast.textContent = '';
+          }, 2500);
+        }
+        if (navigator.share) {
+          navigator.share({ title: title, url: url }).catch(function() {});
+        } else if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(showToast).catch(function() {});
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try { if (document.execCommand('copy')) showToast(); } catch(e) {}
+          document.body.removeChild(ta);
+        }
+      });
+    }
 
     flipBtn.addEventListener('click', function() {
       isFlipped = !isFlipped;
