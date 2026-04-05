@@ -452,8 +452,9 @@
 
 /* Card flip container */
 .modal-postcard-wrapper {
-  width: 100%;
+  width: var(--img-width, 100%);
   perspective: 1200px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .modal-card-container {
@@ -510,6 +511,12 @@
 .modal-accessibility-btns {
   display: flex;
   gap: 16px;
+}
+
+.modal-right-btns {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
 }
 
 .modal-action-btn {
@@ -867,6 +874,29 @@
   .postcard-grid {
     columns: 1;
   }
+}
+
+/* Share toast notification */
+#share-toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(40, 36, 58, 0.9);
+  color: #FFFCFA;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 9999;
+}
+
+#share-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {

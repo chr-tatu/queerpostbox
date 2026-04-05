@@ -592,6 +592,33 @@ function updateListenButtonState() {
   }
 }
 
+var shareToastTimer = null;
+
+function sharePostcard() {
+  if (!currentPostcard) return;
+  var permalink = currentPostcard.dataset.permalink;
+  var title = currentPostcard.dataset.title || '';
+  var url = window.location.origin + permalink;
+
+  if (navigator.share) {
+    navigator.share({ title: title, url: url }).catch(function() {});
+  } else {
+    navigator.clipboard.writeText(url).then(function() {
+      showShareToast();
+    }).catch(function() {});
+  }
+}
+
+function showShareToast() {
+  var toast = document.getElementById('share-toast');
+  if (!toast) return;
+  toast.classList.add('visible');
+  clearTimeout(shareToastTimer);
+  shareToastTimer = setTimeout(function() {
+    toast.classList.remove('visible');
+  }, 2500);
+}
+
 function openModalBySlug(slug) {
   const postcardElement = document.querySelector('[data-slug="' + slug + '"]');
   if (postcardElement) {
@@ -712,6 +739,12 @@ document.addEventListener('DOMContentLoaded', function() {
   postcardModal.querySelector('.modal-read-btn').addEventListener('click', function(e) {
     e.stopPropagation();
     toggleReadOverlay();
+  });
+
+  // Share button — native share sheet with clipboard fallback
+  postcardModal.querySelector('.modal-share-btn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    sharePostcard();
   });
 
   // ==================

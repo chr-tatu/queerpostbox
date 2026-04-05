@@ -1,3 +1,5 @@
+<div id="share-toast" role="status" aria-live="polite">Link copied!</div>
+
 <!-- Postcard Modal -->
 <div id="postcard-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Postcard viewer">
   <div class="modal-backdrop"></div>
@@ -30,9 +32,14 @@
           <img src="{{ '/assets/icons/transcript.svg' | relative_url }}" alt="Read" class="modal-action-icon">
         </button>
       </div>
-      <button class="modal-action-btn modal-flip-btn">
-        <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="modal-action-icon">
-      </button>
+      <div class="modal-right-btns">
+        <button class="modal-action-btn modal-share-btn" aria-label="Share postcard">
+          <img src="{{ '/assets/icons/share.svg' | relative_url }}" alt="Share" class="modal-action-icon">
+        </button>
+        <button class="modal-action-btn modal-flip-btn">
+          <img src="{{ '/assets/icons/flip.svg' | relative_url }}" alt="Flip" class="modal-action-icon">
+        </button>
+      </div>
     </div>
     <button class="modal-arrow-down" aria-label="Send a reply">
       <svg width="32" height="16" viewBox="0 0 32 16" fill="none" xmlns="http://www.w3.org/2000/svg">
