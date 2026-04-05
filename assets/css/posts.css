@@ -129,7 +129,7 @@
   bottom: 32px;
   left: 32px;
   width: var(--width-sidebar);
-  z-index: 100;
+  z-index: var(--z-send-btn);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -298,7 +298,7 @@
 .postcard-item:hover {
   scale: 1.04;
   box-shadow: 0 6px 16px rgba(84, 65, 171, 0.35);
-  z-index: 2;
+  z-index: var(--z-postcard-hover);
 }
 
 .postcard-link {
@@ -330,7 +330,7 @@
   width: 81px;
   height: 81px;
   overflow: hidden;
-  z-index: 2;
+  z-index: var(--z-postcard-hover);
   pointer-events: none;
 }
 
@@ -362,7 +362,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 2000;
+  z-index: var(--z-modal-overlay);
 }
 
 .modal-overlay.active {
@@ -609,7 +609,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 3000;
+  z-index: var(--z-fullscreen);
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.3);
@@ -781,7 +781,7 @@
 @media (max-width: 768px) {
   .landing-layout {
     flex-direction: column;
-    padding: 0 16px 16px;
+    padding: 0 16px 96px;
   }
 
   .sidebar {
@@ -789,6 +789,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    top: auto;
+    z-index: var(--z-mobile-sidebar);
   }
 
   .filters {
@@ -805,7 +808,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 8px;
-    z-index: 100;
+    z-index: var(--z-filter-dropdown);
     max-height: 300px;
     top: 100%;
     left: 0;
@@ -815,10 +818,28 @@
     position: relative;
   }
 
+  /* Send button floats at bottom-center on mobile */
   .send-postcard-btn {
     bottom: 16px;
-    left: 16px;
-    width: calc(100vw - 32px);
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    right: auto;
+    width: var(--width-sidebar);
+    z-index: var(--z-send-btn);
+    background: var(--color-white);
+    border-radius: 20px;
+    border: 2px solid var(--color-lavender);
+  }
+
+  /* Hide rainbow border on mobile — solid border used instead */
+  .send-postcard-btn::before {
+    opacity: 0;
+    animation: none;
+  }
+
+  .site-footer {
+    padding-bottom: 100px;
   }
 
   .reply-card {

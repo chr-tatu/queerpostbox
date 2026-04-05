@@ -68,6 +68,18 @@ function initFilters() {
     countryBtn.classList.remove('has-selection');
     clearFilter();
   });
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('.filter-name') && !e.target.closest('.filter-options')) {
+      filterBtns.forEach(btn => {
+        btn.classList.remove('expanded');
+        btn.setAttribute('aria-expanded', 'false');
+        const filterType = btn.dataset.filter;
+        const options = document.getElementById(filterType + '-options');
+        if (options) options.classList.remove('open');
+      });
+    }
+  }, { capture: true });
 }
 
 function filterByCountry(country) {
