@@ -604,7 +604,7 @@ function sharePostcard() {
 
   if (navigator.share) {
     navigator.share({ title: title, url: url }).catch(function() {});
-  } else {
+  } else if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(function() {
       showShareToast();
     }).catch(function() {});
