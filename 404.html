@@ -1,28 +1,24 @@
 ---
 layout: default
+title: 404 — Page not found
 ---
 
-<style type="text/css" media="screen">
-  .container {
-    margin: 10px auto;
-    max-width: 600px;
-    text-align: center;
-  }
-  h1 {
-    margin: 30px 0;
-    font-size: 4em;
-    line-height: 1;
-    letter-spacing: -1px;
-  }
-</style>
+<link rel="stylesheet" href="{{ '/assets/css/postcard.css' | relative_url }}">
+<link rel="stylesheet" href="{{ '/assets/css/404.css' | relative_url }}">
 
+<div class="error-page">
+  <a href="{{ '/posts.html' | relative_url }}" class="postcard-back-link error-back-link">
+    <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 1L1 6L6 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All postcards
+  </a>
 
-
-<div class="container">
-  <h1>404? More like 4-get it, queen! 👑</h1>
-
-  <img src="{{ '/assets/images/404-drag-queen.png' | relative_url }}" alt="404"/>
-
-  <p><strong>This page got lost in the mail 📬</strong></p>
-  <p>While this page has gone missing, your stories are never forgotten. Find your way back to the main page and send some love!</p>
+  <div class="error-content">
+    <span class="postcard-viewer-number">404</span>
+    <img src="{{ '/assets/images/404-drag-queen.png' | relative_url }}" alt="A drag queen celebrating amid lost mail" class="error-img">
+    <h1 class="error-title">4-get it, queen! 👑</h1>
+    <p class="error-body">This page got lost in the mail. While it's gone missing, most stories are never forgotten. Find your way back and send some love!</p>
+    <a href="{{ '/posts.html' | relative_url }}" class="error-cta">Browse all postcards</a>
+  </div>
 </div>
