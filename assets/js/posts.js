@@ -256,10 +256,12 @@ function openModal(postcardElement, skipAnimation) {
   clone.className = 'fly-clone';
   clone.style.cssText = 'position:fixed;z-index:2001;border-radius:4px;pointer-events:none;' +
     'object-fit:contain;background:transparent;' +
+    'filter:drop-shadow(0 6px 16px rgba(84,65,171,0.35));' +
     'left:' + sourceRect.left + 'px;top:' + sourceRect.top + 'px;' +
     'width:' + sourceRect.width + 'px;height:' + sourceRect.height + 'px;' +
     'transition:left 0.32s cubic-bezier(0.4,0,0.15,1),top 0.32s cubic-bezier(0.4,0,0.15,1),' +
-    'width 0.32s cubic-bezier(0.4,0,0.15,1),height 0.32s cubic-bezier(0.4,0,0.15,1);';
+    'width 0.32s cubic-bezier(0.4,0,0.15,1),height 0.32s cubic-bezier(0.4,0,0.15,1),' +
+    'filter 0.32s cubic-bezier(0.4,0,0.15,1);';
   document.body.appendChild(clone);
 
   // Force reflow
@@ -270,6 +272,7 @@ function openModal(postcardElement, skipAnimation) {
   clone.style.top = (destCenterY - renderedH / 2) + 'px';
   clone.style.width = renderedW + 'px';
   clone.style.height = renderedH + 'px';
+  clone.style.filter = 'drop-shadow(0 6px 16px rgba(0,0,0,0.35))';
 
   // Animate backdrop blur in sync with fly animation
   var backdrop = postcardModal.querySelector('.modal-backdrop');
@@ -288,19 +291,16 @@ function openModal(postcardElement, skipAnimation) {
   }
   requestAnimationFrame(tickBlurIn);
 
-  function onFlyEnd() {
+  function onFlyEnd(e) {
+    if (e.propertyName !== 'width') return;
     clone.removeEventListener('transitionend', onFlyEnd);
     if (flyAborted) { clone.remove(); return; }
     postcardModal._abortFlyIn = null;
-    // Crossfade: show modal while fading clone out
+    // Instant swap: remove clone and show modal in the same frame
+    clone.remove();
     details.style.visibility = '';
     details.style.opacity = '';
     details.classList.remove('fly-hidden');
-    clone.style.transition = 'opacity 0.15s ease';
-    clone.style.opacity = '0';
-    setTimeout(function() {
-      clone.remove();
-    }, 160);
     postcardModal.querySelector('.modal-flip-btn').focus();
   }
   clone.addEventListener('transitionend', onFlyEnd);
@@ -308,10 +308,10 @@ function openModal(postcardElement, skipAnimation) {
   // Safety timeout
   setTimeout(function() {
     if (clone.parentNode) {
+      clone.remove();
       details.style.visibility = '';
       details.style.opacity = '';
       details.classList.remove('fly-hidden');
-      clone.remove();
     }
   }, 500);
 }
@@ -364,6 +364,7 @@ function closeModal(fromPopstate) {
     var clone = sourceImg.cloneNode();
     clone.className = 'fly-clone';
     clone.style.cssText = 'position:fixed;z-index:2001;border-radius:4px;pointer-events:none;' +
+      'filter:drop-shadow(0 6px 16px rgba(0,0,0,0.35));' +
       'left:' + (destCenterX - renderedW / 2) + 'px;top:' + (destCenterY - renderedH / 2) + 'px;' +
       'width:' + renderedW + 'px;height:' + renderedH + 'px;' +
       'transition:all 0.28s cubic-bezier(0.4, 0, 0.15, 1);';
@@ -391,6 +392,7 @@ function closeModal(fromPopstate) {
     clone.style.top = sourceRect.top + 'px';
     clone.style.width = sourceRect.width + 'px';
     clone.style.height = sourceRect.height + 'px';
+    clone.style.filter = 'drop-shadow(0 6px 16px rgba(84,65,171,0.35))';
 
     function onCloseEnd() {
       clone.removeEventListener('transitionend', onCloseEnd);

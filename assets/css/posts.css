@@ -452,9 +452,8 @@
 
 /* Card flip container */
 .modal-postcard-wrapper {
-  width: var(--img-width, 100%);
+  width: 100%;
   perspective: 1200px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .modal-card-container {
@@ -497,6 +496,7 @@
   object-fit: contain;
   display: block;
   border-radius: 2px;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.35));
 }
 
 /* Bottom section: accessibility + flip */
