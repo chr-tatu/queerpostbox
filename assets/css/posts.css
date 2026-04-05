@@ -829,16 +829,17 @@
     z-index: 100;
     background: var(--color-white);
     border-radius: 20px;
+    border: 2px solid var(--color-lavender);
   }
 
-  /* Show rainbow border by default on mobile so button is clearly visible */
+  /* Hide rainbow border on mobile — solid border used instead */
   .send-postcard-btn::before {
-    opacity: 0.8;
-    animation: rainbow-spin 4s linear infinite;
+    opacity: 0;
+    animation: none;
   }
 
   .site-footer {
-    padding-bottom: 80px;
+    padding-bottom: 100px;
   }
 
   .reply-card {
