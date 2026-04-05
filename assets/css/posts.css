@@ -781,7 +781,7 @@
 @media (max-width: 768px) {
   .landing-layout {
     flex-direction: column;
-    padding: 0 16px 16px;
+    padding: 0 16px 96px;
   }
 
   .sidebar {
@@ -818,20 +818,27 @@
     position: relative;
   }
 
-  /* Move send button into the header area on mobile */
+  /* Send button floats at bottom on mobile */
   .send-postcard-btn {
-    top: 20px;
-    right: 16px;
-    bottom: auto;
-    left: auto;
-    width: auto;
-    z-index: 2200;
+    bottom: 16px;
+    left: 16px;
+    top: auto;
+    right: auto;
+    width: calc(100vw - 32px);
+    z-index: 100;
     flex-direction: row;
-    gap: 8px;
-    padding: 8px 14px;
-    background: var(--color-white);
-    box-shadow: 0 1px 0 var(--color-gray-1), 0 2px 8px rgba(84, 65, 171, 0.12);
-    border-radius: 20px;
+    gap: 12px;
+    padding: 12px 24px;
+  }
+
+  /* Show rainbow border by default on mobile so button is clearly visible */
+  .send-postcard-btn::before {
+    opacity: 0.7;
+    animation: rainbow-spin 4s linear infinite;
+  }
+
+  .site-footer {
+    padding-bottom: 80px;
   }
 
   .reply-card {
