@@ -141,7 +141,9 @@ body {
   height: var(--size-logo-lines-h);
 }
 
-/* Page content */
+/* Page content
+   NOTE: Do not add isolation, z-index, or transforms here —
+   modals must be able to layer above the sticky header */
 .page-content {
   width: 100%;
 }

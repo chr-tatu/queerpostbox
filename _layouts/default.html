@@ -28,6 +28,12 @@
     {{ content }}
   </main>
 
+  {% if page.include_modals %}
+    {% include modals/postcard.html %}
+    {% include modals/reply.html %}
+    {% include modals/send.html %}
+  {% endif %}
+
   {% include footer.html %}
 </body>
 </html>
