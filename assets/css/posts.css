@@ -818,22 +818,22 @@
     position: relative;
   }
 
-  /* Send button floats at bottom on mobile */
+  /* Send button floats at bottom-center on mobile */
   .send-postcard-btn {
     bottom: 16px;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
     top: auto;
     right: auto;
-    width: calc(100vw - 32px);
+    width: var(--width-sidebar);
     z-index: 100;
-    flex-direction: row;
-    gap: 12px;
-    padding: 12px 24px;
+    background: var(--color-white);
+    border-radius: 20px;
   }
 
   /* Show rainbow border by default on mobile so button is clearly visible */
   .send-postcard-btn::before {
-    opacity: 0.7;
+    opacity: 0.8;
     animation: rainbow-spin 4s linear infinite;
   }
 
