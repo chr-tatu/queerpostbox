@@ -121,12 +121,14 @@ git push
 
 ## Step 11 — Create follow-up tasks in Notion
 
-If there are outstanding issues, suggestions, or out-of-scope improvements raised during the review (or that you identified during implementation), create follow-up Notion pages as sub-tasks or linked tasks on the original page:
-- Use `notion-create-pages` to create each task in the same database
-- Set the **Priority property to empty** (do not set it — leave it unset so the user knows it was added by you)
-- Give each task a clear title and description
+If there are outstanding issues, suggestions, or out-of-scope improvements raised during the review (or that you identified during implementation):
 
-List what follow-ups you created (if any) in your final summary.
+1. **Check for duplicates first** — use `notion-search` to look for existing tasks with similar titles or topics in the same database. If a similar task already exists, skip creating a duplicate and note the existing task instead.
+2. For each genuinely new follow-up, use `notion-create-pages` to create it in the same database
+3. Set the **Priority property to empty** (do not set it — leave it unset so the user knows it was added by you)
+4. Give each task a clear title and description
+
+List what follow-ups you created (if any) and any existing duplicates you skipped in your final summary.
 
 ---
 
