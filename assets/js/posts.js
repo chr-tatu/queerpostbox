@@ -79,7 +79,7 @@ function initFilters() {
         if (options) options.classList.remove('open');
       });
     }
-  });
+  }, { capture: true });
 }
 
 function filterByCountry(country) {

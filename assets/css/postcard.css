@@ -267,6 +267,7 @@
 
   .postcard-main {
     order: 1;
+    flex: none;
   }
 
   .postcard-meta {
