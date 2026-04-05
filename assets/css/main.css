@@ -144,7 +144,6 @@ body {
 /* Page content */
 .page-content {
   width: 100%;
-  isolation: isolate; /* prevent child stacking contexts from escaping above the sticky header */
 }
 
 /* Footer */

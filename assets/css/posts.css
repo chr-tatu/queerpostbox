@@ -279,6 +279,7 @@
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(84, 65, 171, 0.2);
   border-radius: 4px;
   padding: 16px;
+  isolation: isolate; /* prevent postcard will-change layers from escaping above the sticky header */
 }
 
 .postcard-item {
