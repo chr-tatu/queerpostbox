@@ -83,7 +83,7 @@ layout: default
   </div>
 </div>
 
-<div id="share-toast" role="alert" aria-live="assertive">Link copied!</div>
+<div id="share-toast" role="alert" aria-live="assertive"></div>
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -122,16 +122,29 @@ layout: default
       shareBtn.addEventListener('click', function() {
         var url = window.location.href;
         var title = document.title;
+        function showToast() {
+          if (!shareToast) return;
+          shareToast.textContent = 'Link copied!';
+          shareToast.classList.add('visible');
+          clearTimeout(shareToastTimer);
+          shareToastTimer = setTimeout(function() {
+            shareToast.classList.remove('visible');
+            shareToast.textContent = '';
+          }, 2500);
+        }
         if (navigator.share) {
           navigator.share({ title: title, url: url }).catch(function() {});
         } else if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function() {
-            if (shareToast) {
-              shareToast.classList.add('visible');
-              clearTimeout(shareToastTimer);
-              shareToastTimer = setTimeout(function() { shareToast.classList.remove('visible'); }, 2500);
-            }
-          }).catch(function() {});
+          navigator.clipboard.writeText(url).then(showToast).catch(function() {});
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = url;
+          ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          try { if (document.execCommand('copy')) showToast(); } catch(e) {}
+          document.body.removeChild(ta);
         }
       });
     }

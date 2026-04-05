@@ -608,16 +608,27 @@ function sharePostcard() {
     navigator.clipboard.writeText(url).then(function() {
       showShareToast();
     }).catch(function() {});
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = url;
+    ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { if (document.execCommand('copy')) showShareToast(); } catch(e) {}
+    document.body.removeChild(ta);
   }
 }
 
 function showShareToast() {
   var toast = document.getElementById('share-toast');
   if (!toast) return;
+  toast.textContent = 'Link copied!';
   toast.classList.add('visible');
   clearTimeout(shareToastTimer);
   shareToastTimer = setTimeout(function() {
     toast.classList.remove('visible');
+    toast.textContent = '';
   }, 2500);
 }
 
