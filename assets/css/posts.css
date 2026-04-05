@@ -781,7 +781,7 @@
 @media (max-width: 768px) {
   .landing-layout {
     flex-direction: column;
-    padding: 0 16px 96px;
+    padding: 0 16px 16px;
   }
 
   .sidebar {
@@ -789,6 +789,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+    top: auto;
+    z-index: 10;
   }
 
   .filters {
@@ -815,16 +818,20 @@
     position: relative;
   }
 
+  /* Move send button into the header area on mobile */
   .send-postcard-btn {
-    bottom: 16px;
-    left: 16px;
-    width: calc(100vw - 32px);
+    top: 20px;
+    right: 16px;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    z-index: 2200;
     flex-direction: row;
-    gap: 12px;
-    padding: 12px 24px;
+    gap: 8px;
+    padding: 8px 14px;
     background: var(--color-white);
-    box-shadow: 0 2px 12px rgba(84, 65, 171, 0.18);
-    border-radius: 16px;
+    box-shadow: 0 1px 0 var(--color-gray-1), 0 2px 8px rgba(84, 65, 171, 0.12);
+    border-radius: 20px;
   }
 
   .reply-card {
