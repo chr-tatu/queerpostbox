@@ -7,3 +7,4 @@ vendor
 .vscode
 .claude/launch.json
 .claude/settings.json
+node_modules/

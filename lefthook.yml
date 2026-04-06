@@ -1,0 +1,9 @@
+pre-commit:
+  parallel: true
+  commands:
+    stylelint:
+      glob: "assets/css/*.css"
+      run: /opt/homebrew/bin/mise exec -- npx stylelint {staged_files}
+    eslint:
+      glob: "assets/js/*.js"
+      run: /opt/homebrew/bin/mise exec -- npx eslint {staged_files}
