@@ -1,2 +1,12 @@
 [tools]
 ruby = "3.4"
+node = "22"
+lefthook = "latest"
+
+[tasks.setup]
+description = "Install all dependencies and git hooks"
+run = [
+  "bundle install",
+  "npm install",
+  "lefthook install",
+]

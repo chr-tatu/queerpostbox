@@ -1,0 +1,12 @@
+{
+  "name": "queerpostbox",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^9",
+    "eslint": "^9",
+    "globals": "^15",
+    "stylelint": "^16",
+    "stylelint-config-standard": "^36"
+  }
+}

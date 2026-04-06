@@ -275,7 +275,7 @@ function openModal(postcardElement, skipAnimation) {
   clone.style.filter = 'drop-shadow(0 6px 16px rgba(0,0,0,0.35))';
 
   // Animate backdrop blur in sync with fly animation
-  var backdrop = postcardModal.querySelector('.modal-backdrop');
+  backdrop = postcardModal.querySelector('.modal-backdrop');
   var blurDuration = 320; // match fly transition
   var blurMax = 8;
   var blurStart = performance.now();

@@ -3,9 +3,9 @@
 
 ## Development
 
-Install dependencies:
+Install dependencies and set up git hooks:
 ```bash
-bundle install
+mise install && mise run setup
 ```
 
 Start the development server:
