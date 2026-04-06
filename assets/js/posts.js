@@ -197,7 +197,13 @@ function openModal(postcardElement, skipAnimation) {
 
   // --- Fly Animation using a floating clone ---
   var flyAborted = false;
-  postcardModal._abortFlyIn = function() { flyAborted = true; };
+  postcardModal._abortFlyIn = function() {
+    flyAborted = true;
+    if (postcardModal._blurRafId) {
+      cancelAnimationFrame(postcardModal._blurRafId);
+      postcardModal._blurRafId = null;
+    }
+  };
   var scrollY = window.scrollY;
 
   // Lock scroll first so all measurements are in the same viewport state (no scrollbar shift)
@@ -275,21 +281,30 @@ function openModal(postcardElement, skipAnimation) {
   clone.style.filter = 'drop-shadow(0 6px 16px rgba(0,0,0,0.35))';
 
   // Animate backdrop blur in sync with fly animation
+  // Cancel any in-progress blur-out before starting blur-in
+  if (postcardModal._blurRafId) {
+    cancelAnimationFrame(postcardModal._blurRafId);
+    postcardModal._blurRafId = null;
+  }
   var backdrop = postcardModal.querySelector('.modal-backdrop');
   var blurDuration = 320; // match fly transition
   var blurMax = 8;
   var blurStart = performance.now();
   function tickBlurIn(now) {
-    if (flyAborted) return;
+    if (flyAborted) { postcardModal._blurRafId = null; return; }
     var t = Math.min((now - blurStart) / blurDuration, 1);
     // ease-out curve
     var ease = 1 - (1 - t) * (1 - t);
     var blur = (blurMax * ease).toFixed(1);
     backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
     backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-    if (t < 1) requestAnimationFrame(tickBlurIn);
+    if (t < 1) {
+      postcardModal._blurRafId = requestAnimationFrame(tickBlurIn);
+    } else {
+      postcardModal._blurRafId = null;
+    }
   }
-  requestAnimationFrame(tickBlurIn);
+  postcardModal._blurRafId = requestAnimationFrame(tickBlurIn);
 
   function onFlyEnd(e) {
     if (e.propertyName !== 'width') return;
@@ -371,6 +386,11 @@ function closeModal(fromPopstate) {
     document.body.appendChild(clone);
 
     // Animate backdrop blur out in sync with fly-out
+    // Cancel any in-progress blur-in before starting blur-out
+    if (postcardModal._blurRafId) {
+      cancelAnimationFrame(postcardModal._blurRafId);
+      postcardModal._blurRafId = null;
+    }
     var backdrop = postcardModal.querySelector('.modal-backdrop');
     var blurOutDuration = 280; // match close fly transition
     var blurOutStart = performance.now();
@@ -380,9 +400,13 @@ function closeModal(fromPopstate) {
       var blur = (8 * (1 - ease)).toFixed(1);
       backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
       backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-      if (t < 1) requestAnimationFrame(tickBlurOut);
+      if (t < 1) {
+        postcardModal._blurRafId = requestAnimationFrame(tickBlurOut);
+      } else {
+        postcardModal._blurRafId = null;
+      }
     }
-    requestAnimationFrame(tickBlurOut);
+    postcardModal._blurRafId = requestAnimationFrame(tickBlurOut);
 
     // Force reflow
     clone.offsetHeight;
@@ -423,6 +447,10 @@ function closeModal(fromPopstate) {
   function finishClose() {
     if (closed) return;
     closed = true;
+    if (postcardModal._blurRafId) {
+      cancelAnimationFrame(postcardModal._blurRafId);
+      postcardModal._blurRafId = null;
+    }
     postcardModal.classList.remove('active');
     details.classList.remove('fly-hidden');
     details.style.opacity = '';
@@ -764,69 +792,73 @@ document.addEventListener('DOMContentLoaded', function() {
   // Scroll Inertia Effect
   // ==================
 
-  // Each card tracks its own offset that lags behind scroll
-  var cardOffsets = new Array(postcardItems.length);
-  var cardRandomFactors = new Array(postcardItems.length);
-  for (var ci = 0; ci < cardOffsets.length; ci++) {
-    cardOffsets[ci] = 0;
-    cardRandomFactors[ci] = 0.6 + Math.random() * 0.8; // 0.6 to 1.4
-  }
+  var inertiaEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  var scrollDelta = 0;
-  var inertiaRunning = false;
-
-  window.addEventListener('scroll', function() {
-    var currentY = window.scrollY;
-    scrollDelta += currentY - lastScrollY;
-    lastScrollY = currentY;
-
-    if (!inertiaRunning) {
-      inertiaRunning = true;
-      requestAnimationFrame(tickInertia);
+  if (inertiaEnabled) {
+    // Each card tracks its own offset that lags behind scroll
+    var cardOffsets = new Array(postcardItems.length);
+    var cardRandomFactors = new Array(postcardItems.length);
+    for (var ci = 0; ci < cardOffsets.length; ci++) {
+      cardOffsets[ci] = 0;
+      cardRandomFactors[ci] = 0.6 + Math.random() * 0.8; // 0.6 to 1.4
     }
-  }, { passive: true });
 
-  function tickInertia() {
-    var anyMoving = false;
+    var scrollDelta = 0;
+    var inertiaRunning = false;
 
-    postcardItems.forEach(function(item, i) {
-      if (item.classList.contains('filtered-out')) {
-        cardOffsets[i] = 0;
-        item.style.transform = '';
-        return;
+    window.addEventListener('scroll', function() {
+      var currentY = window.scrollY;
+      scrollDelta += currentY - lastScrollY;
+      lastScrollY = currentY;
+
+      if (!inertiaRunning) {
+        inertiaRunning = true;
+        requestAnimationFrame(tickInertia);
       }
+    }, { passive: true });
 
-      // Push offset by scroll delta, scaled by card's viewport position
-      // Cards further from viewport center get more lag
-      var rect = item.getBoundingClientRect();
-      var viewCenter = window.innerHeight / 2;
-      var cardCenter = rect.top + rect.height / 2;
-      var distFromCenter = Math.abs(cardCenter - viewCenter) / viewCenter;
-      var lagFactor = 0.4 + distFromCenter * 0.6; // 0.4 to 1.0
+    function tickInertia() {
+      var anyMoving = false;
 
-      cardOffsets[i] += scrollDelta * lagFactor * cardRandomFactors[i] * 0.7;
+      postcardItems.forEach(function(item, i) {
+        if (item.classList.contains('filtered-out')) {
+          cardOffsets[i] = 0;
+          item.style.transform = '';
+          return;
+        }
 
-      // Clamp
-      cardOffsets[i] = Math.max(-50, Math.min(50, cardOffsets[i]));
+        // Push offset by scroll delta, scaled by card's viewport position
+        // Cards further from viewport center get more lag
+        var rect = item.getBoundingClientRect();
+        var viewCenter = window.innerHeight / 2;
+        var cardCenter = rect.top + rect.height / 2;
+        var distFromCenter = Math.abs(cardCenter - viewCenter) / viewCenter;
+        var lagFactor = 0.4 + distFromCenter * 0.6; // 0.4 to 1.0
 
-      // Lerp back toward 0 (this creates the "catching up" feel)
-      cardOffsets[i] *= 0.9;
+        cardOffsets[i] += scrollDelta * lagFactor * cardRandomFactors[i] * 0.7;
 
-      if (Math.abs(cardOffsets[i]) > 0.3) {
-        item.style.transform = 'translateY(' + cardOffsets[i].toFixed(1) + 'px)';
-        anyMoving = true;
+        // Clamp
+        cardOffsets[i] = Math.max(-50, Math.min(50, cardOffsets[i]));
+
+        // Lerp back toward 0 (this creates the "catching up" feel)
+        cardOffsets[i] *= 0.9;
+
+        if (Math.abs(cardOffsets[i]) > 0.3) {
+          item.style.transform = 'translateY(' + cardOffsets[i].toFixed(1) + 'px)';
+          anyMoving = true;
+        } else {
+          cardOffsets[i] = 0;
+          item.style.transform = '';
+        }
+      });
+
+      scrollDelta = 0;
+
+      if (anyMoving) {
+        requestAnimationFrame(tickInertia);
       } else {
-        cardOffsets[i] = 0;
-        item.style.transform = '';
+        inertiaRunning = false;
       }
-    });
-
-    scrollDelta = 0;
-
-    if (anyMoving) {
-      requestAnimationFrame(tickInertia);
-    } else {
-      inertiaRunning = false;
     }
   }
 
