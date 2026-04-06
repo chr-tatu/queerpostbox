@@ -8,13 +8,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the site in the jekyll/builder container
-      run: |
-        docker run \
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-        jekyll/builder:latest /bin/bash -c "chmod -R 777 /srv/jekyll && jekyll build --future"
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+      - run: bundle install
+      - name: Build site
+        run: bundle exec jekyll build --future
+      - name: Validate site (html-proofer)
+        run: |
+          bundle exec htmlproofer ./_site \
+            --disable-external \
+            --no-enforce-https \
+            --no-ignore-missing-alt
