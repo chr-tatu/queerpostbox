@@ -197,13 +197,7 @@ function openModal(postcardElement, skipAnimation) {
 
   // --- Fly Animation using a floating clone ---
   var flyAborted = false;
-  postcardModal._abortFlyIn = function() {
-    flyAborted = true;
-    if (postcardModal._blurRafId) {
-      cancelAnimationFrame(postcardModal._blurRafId);
-      postcardModal._blurRafId = null;
-    }
-  };
+  postcardModal._abortFlyIn = function() { flyAborted = true; };
   var scrollY = window.scrollY;
 
   // Lock scroll first so all measurements are in the same viewport state (no scrollbar shift)
@@ -281,30 +275,21 @@ function openModal(postcardElement, skipAnimation) {
   clone.style.filter = 'drop-shadow(0 6px 16px rgba(0,0,0,0.35))';
 
   // Animate backdrop blur in sync with fly animation
-  // Cancel any in-progress blur-out before starting blur-in
-  if (postcardModal._blurRafId) {
-    cancelAnimationFrame(postcardModal._blurRafId);
-    postcardModal._blurRafId = null;
-  }
   var backdrop = postcardModal.querySelector('.modal-backdrop');
   var blurDuration = 320; // match fly transition
   var blurMax = 8;
   var blurStart = performance.now();
   function tickBlurIn(now) {
-    if (flyAborted) { postcardModal._blurRafId = null; return; }
+    if (flyAborted) return;
     var t = Math.min((now - blurStart) / blurDuration, 1);
     // ease-out curve
     var ease = 1 - (1 - t) * (1 - t);
     var blur = (blurMax * ease).toFixed(1);
     backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
     backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-    if (t < 1) {
-      postcardModal._blurRafId = requestAnimationFrame(tickBlurIn);
-    } else {
-      postcardModal._blurRafId = null;
-    }
+    if (t < 1) requestAnimationFrame(tickBlurIn);
   }
-  postcardModal._blurRafId = requestAnimationFrame(tickBlurIn);
+  requestAnimationFrame(tickBlurIn);
 
   function onFlyEnd(e) {
     if (e.propertyName !== 'width') return;
@@ -386,11 +371,6 @@ function closeModal(fromPopstate) {
     document.body.appendChild(clone);
 
     // Animate backdrop blur out in sync with fly-out
-    // Cancel any in-progress blur-in before starting blur-out
-    if (postcardModal._blurRafId) {
-      cancelAnimationFrame(postcardModal._blurRafId);
-      postcardModal._blurRafId = null;
-    }
     var backdrop = postcardModal.querySelector('.modal-backdrop');
     var blurOutDuration = 280; // match close fly transition
     var blurOutStart = performance.now();
@@ -400,13 +380,9 @@ function closeModal(fromPopstate) {
       var blur = (8 * (1 - ease)).toFixed(1);
       backdrop.style.backdropFilter = 'blur(' + blur + 'px)';
       backdrop.style.webkitBackdropFilter = 'blur(' + blur + 'px)';
-      if (t < 1) {
-        postcardModal._blurRafId = requestAnimationFrame(tickBlurOut);
-      } else {
-        postcardModal._blurRafId = null;
-      }
+      if (t < 1) requestAnimationFrame(tickBlurOut);
     }
-    postcardModal._blurRafId = requestAnimationFrame(tickBlurOut);
+    requestAnimationFrame(tickBlurOut);
 
     // Force reflow
     clone.offsetHeight;
@@ -447,10 +423,6 @@ function closeModal(fromPopstate) {
   function finishClose() {
     if (closed) return;
     closed = true;
-    if (postcardModal._blurRafId) {
-      cancelAnimationFrame(postcardModal._blurRafId);
-      postcardModal._blurRafId = null;
-    }
     postcardModal.classList.remove('active');
     details.classList.remove('fly-hidden');
     details.style.opacity = '';
