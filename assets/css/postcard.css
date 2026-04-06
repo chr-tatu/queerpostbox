@@ -117,12 +117,13 @@
   position: relative;
   width: 100%;
   transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.45, 0, 0.25, 1);
+  will-change: transform;
 }
 
 .postcard-viewer-front {
   width: 100%;
   backface-visibility: hidden;
-  transition: opacity 0.3s ease;
 }
 
 .postcard-viewer-back {
@@ -131,19 +132,42 @@
   position: absolute;
   top: 0;
   left: 0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
+  transform: rotateY(-180deg);
 }
 
-.postcard-viewer-container.flipped .postcard-viewer-front {
-  opacity: 0;
-  pointer-events: none;
+.postcard-viewer-container.flipped {
+  transform: rotateY(-180deg);
 }
 
-.postcard-viewer-container.flipped .postcard-viewer-back {
-  opacity: 1;
-  pointer-events: auto;
+@media (prefers-reduced-motion: reduce) {
+  .postcard-viewer-container {
+    transition: none;
+  }
+
+  .postcard-viewer-front {
+    transition: opacity 0.3s ease;
+  }
+
+  .postcard-viewer-back {
+    transform: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .postcard-viewer-container.flipped {
+    transform: none;
+  }
+
+  .postcard-viewer-container.flipped .postcard-viewer-front {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .postcard-viewer-container.flipped .postcard-viewer-back {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 .postcard-viewer-img {
