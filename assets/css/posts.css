@@ -829,18 +829,23 @@
     position: relative;
   }
 
-  /* Send button floats at bottom-center on mobile */
+  /* Send button floats at bottom-left on mobile */
   .send-postcard-btn {
     bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 16px;
+    transform: none;
     top: auto;
     right: auto;
-    width: var(--width-sidebar);
+    width: auto;
+    padding: 10px 20px;
     z-index: var(--z-send-btn);
     background: var(--color-white);
     border-radius: 20px;
     border: 2px solid var(--color-lavender);
+  }
+
+  .send-label-suffix {
+    display: none;
   }
 
   /* Hide rainbow border on mobile — solid border used instead */
