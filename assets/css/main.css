@@ -37,7 +37,7 @@
   --offset-logo-lines-left: 130px;
 
   /* Layout sizing — desktop */
-  --width-sidebar: 160px;
+  --width-sidebar: 200px;
   /* sticky-top-sidebar must stay above the header height (header h ≈ 126px on tablet, 140px desktop) */
   --sticky-top-sidebar: 140px;
 
@@ -216,7 +216,7 @@ body {
     --size-logo-lines-w: 96px;
     --size-logo-lines-h: 55px;
     --offset-logo-lines-left: 104px;
-    --width-sidebar: 148px;
+    --width-sidebar: 180px;
     --sticky-top-sidebar: 130px;
     --size-icon-action: 56px;
     --size-icon-send-w: 44px;

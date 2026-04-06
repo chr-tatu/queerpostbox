@@ -2,7 +2,7 @@
 .landing-layout {
   display: flex;
   padding: 0 32px 32px;
-  gap: 16px;
+  gap: 32px;
   min-height: calc(100vh - 180px);
 }
 
@@ -127,7 +127,8 @@
 .send-postcard-btn {
   position: fixed;
   bottom: 32px;
-  left: 32px;
+  left: calc(32px + var(--width-sidebar) / 2);
+  transform: translateX(-50%);
   width: var(--width-sidebar);
   z-index: var(--z-send-btn);
   display: flex;
@@ -137,7 +138,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 14px 24px 12px;
+  padding: 14px 32px 12px;
   border-radius: 20px;
   transition: box-shadow 0.3s ease;
 }
@@ -777,12 +778,14 @@
 
   .landing-layout {
     padding: 0 24px 24px;
+    gap: 24px;
   }
 
   .send-postcard-btn {
-    left: 24px;
+    left: calc(24px + var(--width-sidebar) / 2);
+    transform: translateX(-50%);
     width: var(--width-sidebar);
-    padding: 12px 20px 10px;
+    padding: 12px 24px 10px;
   }
 }
 
