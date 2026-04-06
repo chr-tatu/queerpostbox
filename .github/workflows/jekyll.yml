@@ -38,8 +38,5 @@ jobs:
         run: |
           bundle exec htmlproofer ./_site \
             --disable-external \
-            --check-html \
-            --check-img-http \
-            --enforce-https=false \
-            --allow-missing-href=false \
-            --ignore-missing-alt=false
+            --no-enforce-https \
+            --no-ignore-missing-alt
