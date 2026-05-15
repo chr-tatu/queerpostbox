@@ -49,7 +49,7 @@ include_modals: true
            data-date="{{ post.date | date: '%B %d, %Y' }}"
            data-country="{{ post.country }}"
            data-topic="{{ post.topic }}"
-           data-content="{{ post.content | escape }}"
+           data-content="{{ post.content | strip_html | escape_once }}"
            data-number="{{ post_number }}"
            {% if post.audio %}data-audio="{{ post.audio | relative_url }}"{% endif %}>
         {% if is_new %}

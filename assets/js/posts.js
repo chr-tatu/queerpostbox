@@ -566,7 +566,7 @@ function toggleReadOverlay() {
     readBtn.setAttribute('aria-label', 'Read transcript');
   } else {
     if (currentPostcard && currentPostcard.dataset.content) {
-      postcardModal.querySelector('.modal-read-text').innerHTML = currentPostcard.dataset.content;
+      postcardModal.querySelector('.modal-read-text').textContent = currentPostcard.dataset.content;
     }
     updateReadOverlaySize();
     overlay.classList.add('active');
